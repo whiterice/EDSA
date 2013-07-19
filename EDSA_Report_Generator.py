@@ -19,11 +19,9 @@ with open('ARCHEAT.csv') as csvfile:
     
     for row in iFile:
         if i == 0:
-            print('# '.join(row))
             Heading = row
             print(Heading)
         else:
-            print(', '.join(row))
             Data[i] = row
             print(Data[i])
             
