@@ -3,9 +3,11 @@
 import os
 import csv
 
-"""Temporary Working Directory"""
-
+"""Home Working Directory"""
 os.chdir('c:/Projects/EDSA Report Generator/Test Directory')
+
+"""PowerCore Working Directory"""
+os.chdir('c:/Documents and Settings/Scott Vermeire/My Documents/Dropbox/EDSA Report Generator/Python Code/Test Directory')
 
 with open('ARCHEAT.csv') as csvfile:
     iFile = csv.reader(csvfile)
