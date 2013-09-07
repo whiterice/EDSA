@@ -4,7 +4,7 @@ import os
 import csv
 
 # Home Working Directory
-os.chdir('c:/Projects/EDSA Report Generator/Test Directory')
+os.chdir('c:/Projects/SV0002 - EDSA Report Generator/Test Directory')
 
 # PowerCore Working Directory
 # os.chdir('c:\Documents and Settings\Scott Vermeire\My Documents\Dropbox\EDSA Report Generator\Test Directory')"""
@@ -70,12 +70,34 @@ while count < i:
         Equipment4160V[n]= Data[count]
         n=n+1
     else:
-        UNSORTED_Equipment[p]= Data[count]
+        EquipmentUNSORTED[p]= Data[count]
         p=p+1
     count=count+1
 
-"""
-print('\n\nUNSORTED EQUIPMENMT: \n')
-for EachObject in len(Equipment208V):
-    print('\n', Equipment208V[EachObject])
-"""
+#Resulting List
+if len(Equipment208V)!=0:
+    print('\n\nEquipment208V: \n')
+    for EachObject in Equipment208V:
+        print('\n', EachObject)
+if len(Equipment240V)!=0:
+    print('\n\nEquipment240V: \n')
+    for EachObject in Equipment240V:
+        print('\n', EachObject)
+if len(Equipment600V)!=0:
+    print('\n\nEquipment600V: \n')
+    for EachObject in Equipment600V:
+        print('\n', EachObject)
+if len(Equipment480V)!=0:
+    print('\n\nEquipment480V: \n')
+    for EachObject in Equipment480V:
+        print('\n', EachObject)
+if len(Equipment4160V)!=0:
+    print('\n\nEquipment4160V: \n')
+    for EachObject in Equipment4160V:
+        print('\n', EachObject)
+if len(EquipmentUNSORTED)!=0:
+    print('\n\nEquipmentUNSORTED: \n')
+    for EachObject in EquipmentUNSORTED:
+        print('\n', EachObject)
+
+
