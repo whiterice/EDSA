@@ -15,6 +15,29 @@ os.chdir('f:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory')
 # Array Initialization for Reading File
 Data = [0 for x in range(14)]
 
+#Class Declaration
+
+class Equipment:
+    'Common Base Class for all Equipment'
+    EquipmentCount=0
+
+    def __init__(self, BusName, ProtectiveDeviceName, BusVoltage, BoltedFaultCurrent, BranchCurrent, CriticalCase, ArcingCurrent, TripDelayTime, FaultDuration, Configuration, ArcFlashBoundary, WorkingDistance, AvailableEnergy, PPEClass):
+        self.BusName
+        self.ProtectiveDeviceName
+        self.BusVoltage
+        self.BoltedFaultCurrent
+        self.BranchCurrent
+        self.CriticalCase
+        self.ArcingCurrent
+        self.TripDelayTime
+        self.FaultDuration
+        self.Configuration
+        self.ArcFlashBoundary
+        self.WorkingDistance
+        self.AvailableEnergy
+        self.PPEClass
+        Equipment.EquipmentCount += 1
+
 # Split Data from Headings
 with open('ARCHEAT.csv') as csvfile:
     iFile = csv.reader(csvfile)
@@ -27,7 +50,7 @@ with open('ARCHEAT.csv') as csvfile:
         else:
             Data[i] = row
             print(Data[i])
-            # print(Data[i][2])
+            #print(Data[i][2])
         i = i+1   
 
 """
