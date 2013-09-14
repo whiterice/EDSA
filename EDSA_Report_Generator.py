@@ -4,10 +4,13 @@ import os
 import csv
 
 # Home Working Directory
-os.chdir('c:/Projects/SV0002 - EDSA Report Generator/Test Directory')
+#os.chdir('c:/Projects/SV0002 - EDSA Report Generator/Test Directory')
 
 # PowerCore Working Directory
 # os.chdir('c:\Documents and Settings\Scott Vermeire\My Documents\Dropbox\EDSA Report Generator\Test Directory')"""
+
+#Hard Drive Directory
+os.chdir('f:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory')
 
 # Array Initialization for Reading File
 Data = [0 for x in range(14)]
