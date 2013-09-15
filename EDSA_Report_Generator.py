@@ -6,9 +6,6 @@ import csv
 # Home Working Directory
 #os.chdir('c:/Projects/SV0002 - EDSA Report Generator/Test Directory')
 
-# PowerCore Working Directory
-# os.chdir('c:\Documents and Settings\Scott Vermeire\My Documents\Dropbox\EDSA Report Generator\Test Directory')"""
-
 #Hard Drive Directory
 os.chdir('f:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory')
 
@@ -82,4 +79,23 @@ for EachItem in EquipmentList:
     else:
         EquipmentUNSORTED.append(Equipment(EachItem.BusName, EachItem.ProtectiveDeviceName, EachItem.BusVoltage, EachItem.BoltedFaultCurrent, EachItem.BranchCurrent, EachItem.CriticalCase, EachItem.ArcingCurrent, EachItem.TripDelayTime, EachItem.FaultDuration, EachItem.Configuration, EachItem.ArcFlashBoundary, EachItem.WorkingDistance, EachItem.AvailableEnergy, EachItem.PPEClass))
 
+
+#Export Sorting Results
+for EachItem in Equipment208V:
+    EachItem.DisplayEquipment()
+
+for EachItem in Equipment240V:
+    EachItem.DisplayEquipment()
+
+for EachItem in Equipment480V:
+    EachItem.DisplayEquipment()
+
+for EachItem in Equipment600V:
+    EachItem.DisplayEquipment()
+
+for EachItem in Equipment4160V:
+    EachItem.DisplayEquipment()
+
+for EachItem in EquipmentUNSORTED:
+    EachItem.DisplayEquipment()
 
