@@ -12,6 +12,21 @@ from datetime import datetime
 #Hard Drive Directory
 os.chdir('f:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory')
 
+#Variable List
+Job_Number = 'S1234'
+Cutomer_Company = 'PowerCore'
+Customer_Buidling = 'Main Office'
+Customer_Address = '4096 Meadowbrook Drive'
+        
+# Styles for Excel Report
+TableText_Style = xlwt.easyxf('pattern: pattern solid, fore_colour white; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.00')
+Archeat0_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour green; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.00')
+Archeat1_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour yellow; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.00')
+Archeat2_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour orange; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.00')
+Archeat3_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour pink; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.00')
+Archeat4_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour red; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.00')
+ArcheatNA_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour brown; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.00')
+
 # List Declaration
 EquipmentList = []
 Equipment208V = []
@@ -40,6 +55,20 @@ class Equipment:
         self.WorkingDistance = WorkingDistance
         self.AvailableEnergy = AvailableEnergy
         self.PPEClass = PPEClass
+        if self.PPEClass=='0' :
+            self.Archeat_Style = Archeat0_Style
+        elif self.PPEClass=='1' :
+            self.Archeat_Style = Archeat1_Style
+        elif self.PPEClass=='2' :
+            self.Archeat_Style = Archeat2_Style
+        elif self.PPEClass=='3' :
+            self.Archeat_Style = Archeat3_Style
+        elif self.PPEClass=='4' :
+            self.Archeat_Style = Archeat4_Style
+        elif self.PPEClass=='NA' :
+            self.Archeat_Style = ArcheatNA_Style
+        else:
+            self.Archeat_Style = Archeat0_Style           
         self.CalcFactor = 1.5
         if self.BusVoltage < '0.050':
             self.LimitedAB = 'Not Specified'
@@ -69,19 +98,51 @@ class Equipment:
             self.LimitedAB = 'Equipment_Voltage_Error'
             self.RestrictedAB = 'Equipment_Voltage_Error'
             self.ProhibitedAB = 'Equipment_Voltage_Error'
+
+    def __str__(self):
+        names = ('BusName',
+               'ProtectiveDeviceName',
+               'BusVoltage',
+               'BoltedFaultCurrent',
+               'BranchCurrent',
+               'CriticalCase',
+               'ArcingCurrent',
+               'TripDelayTime',
+               'FaultDuration',
+               'Configuration',
+               'ArcFlashBoundary',
+               'WorkingDistance',
+               'AvailableEnergy',
+               'PPEClass',
+               'CalcFactor',
+               'LimitedAB',
+               'RestrictedAB',
+               'ProhibitedAB',)
+        out = []
+        for n in names:
+            v = getattr(self, n)
+            out.append("{name:<30} : {value:>30}\n".format(name=n, value=v))
+        out.append('{}\n'.format('*' * 63))
+
+        return ''.join(out)
         
     def DisplayEquipment(self):
-        print '\nBusName :              ', self.BusName, '\nProtectiveDeviceName : ', self.ProtectiveDeviceName, '\nBusVoltage :           ', self.BusVoltage, '\nBoltedFaultCurrent :   ', self.BoltedFaultCurrent, '\nBranchCurrent :        ', self.BranchCurrent, '\nCriticalCase :         ', self.CriticalCase, '\nArcingCurrent :        ', self.ArcingCurrent, '\nTripDelayTime :        ', self.TripDelayTime, '\nFaultDuration :        ', self.FaultDuration, '\nConfiguration :        ', self.Configuration, '\nArcFlashBoundary :     ', self.ArcFlashBoundary, '\nWorkingDistance :      ', self.WorkingDistance, '\nAvailableEnergy :      ', self.AvailableEnergy, '\nPPEClass :             ', self.PPEClass, '\n\nCalcFactor :           ', self.CalcFactor, '\nLimitedAB :            ', self.LimitedAB, '\nRestrictedAB :         ', self.RestrictedAB, '\nProhibitedAB :         ', self.ProhibitedAB, '\n****************************************\n'
+        print str(self)
        
-
-# Styles for Excel Report
-TableText_Style = xlwt.easyxf('pattern: pattern solid, fore_colour white; font: height 200, name Arial, color-index black; border: left 2, right 2, top 2, bottom 2', num_format_str='#,##0.00')
-Archeat0_Style = xlwt.easyxf('pattern: pattern solid, fore_colour green; font: height 200, name Arial, color-index black; border: left 2, right 2, top 2, bottom 2', num_format_str='#,##0.00')
-Archeat1_Style = xlwt.easyxf('pattern: pattern solid, fore_colour yellow; font: height 200, name Arial, color-index black; border: left 2, right 2, top 2, bottom 2', num_format_str='#,##0.00')
-Archeat2_Style = xlwt.easyxf('pattern: pattern solid, fore_colour orange; font: height 200, name Arial, color-index black; border: left 2, right 2, top 2, bottom 2', num_format_str='#,##0.00')
-Archeat3_Style = xlwt.easyxf('pattern: pattern solid, fore_colour pink; font: height 200, name Arial, color-index black; border: left 2, right 2, top 2, bottom 2', num_format_str='#,##0.00')
-Archeat4_Style = xlwt.easyxf('pattern: pattern solid, fore_colour red; font: height 200, name Arial, color-index black; border: left 2, right 2, top 2, bottom 2', num_format_str='#,##0.00')
-ArcheatNA_Style = xlwt.easyxf('pattern: pattern solid, fore_colour brown; font: height 200, name Arial, color-index black; border: left 2, right 2, top 2, bottom 2', num_format_str='#,##0.00')
+    def PrintArcheatTableRow(self, BusIteration):
+        ws.write(BusIteration, 0, self.BusName, TableText_Style)
+        ws.write(BusIteration, 1, self.ProtectiveDeviceName, TableText_Style)
+        ws.write(BusIteration, 2, self.BusVoltage, TableText_Style)
+        ws.write(BusIteration, 3, self.BoltedFaultCurrent, TableText_Style)
+        ws.write(BusIteration, 4, self.BranchCurrent, TableText_Style)
+        ws.write(BusIteration, 5, self.CriticalCase, TableText_Style)
+        ws.write(BusIteration, 6, self.ArcingCurrent, TableText_Style)
+        ws.write(BusIteration, 7, self.TripDelayTime, TableText_Style)
+        ws.write(BusIteration, 8, self.Configuration, TableText_Style)
+        ws.write(BusIteration, 9, self.ArcFlashBoundary, TableText_Style)
+        ws.write(BusIteration, 10, self.WorkingDistance, TableText_Style)
+        ws.write(BusIteration, 11, self.AvailableEnergy, TableText_Style)
+        ws.write(BusIteration, 12, self.PPEClass, self.Archeat_Style)
 
 
 # Split Data from Headings and organize into Equipment Class
@@ -135,4 +196,31 @@ for EachItem in Equipment4160V:
 
 for EachItem in EquipmentUNSORTED:
     EachItem.DisplayEquipment()
+
+#Write to Excel
+wb = xlwt.Workbook()
+ws = wb.add_sheet('208V Equipment')
+line=0
+
+for EachItem in Equipment208V:
+    EachItem.PrintArcheatTableRow(line)
+    line=line+1
+   
+    ws.col(0).width=256*24
+    ws.col(1).width=256*24
+    ws.col(2).width=256*10
+    ws.col(3).width=256*10
+    ws.col(4).width=256*10
+    ws.col(5).width=256*10
+    ws.col(6).width=256*10
+    ws.col(7).width=256*10
+    ws.col(8).width=256*10
+    ws.col(9).width=256*10
+    ws.col(10).width=256*10
+    ws.col(11).width=256*10
+    ws.col(12).width=256*10
+    ws.col(13).width=256*10
+
+Workbook_FileName = '{!s}-AF_Archeat_Tables.xls'.format(Job_Number)
+wb.save(Workbook_FileName)
 
