@@ -21,7 +21,7 @@ Equipment480V = []
 Equipment4160V = []
 EquipmentUNSORTED = []
 
-#Class Declaration
+#Equipment Class Declaration
 class Equipment:
     'Common Base Class for all Equipment'
 
@@ -40,9 +40,39 @@ class Equipment:
         self.WorkingDistance = WorkingDistance
         self.AvailableEnergy = AvailableEnergy
         self.PPEClass = PPEClass
+        self.CalcFactor = 1.5
+        if self.BusVoltage < '0.050':
+            self.LimitedAB = 'Not Specified'
+            self.RestrictedAB = 'Not Specified'
+            self.ProhibitedAB = 'Not Specified'
+        elif (self.BusVoltage >= '0.050')&(self.BusVoltage <= '0.300'):
+            self.LimitedAB = '42'
+            self.RestrictedAB = 'Avoid Contact'
+            self.ProhibitedAB = 'Avoid Contact'
+        elif (self.BusVoltage >= '0.301')&(self.BusVoltage <= '0.750'):
+            self.LimitedAB = '42'
+            self.RestrictedAB = '1'
+            self.ProhibitedAB = '1'
+        elif (self.BusVoltage >= '0.751')&(self.BusVoltage <= '15.000'):
+            self.LimitedAB = '60'
+            self.RestrictedAB = '26'
+            self.ProhibitedAB = '7'
+        elif (self.BusVoltage >= '15.100')&(self.BusVoltage <= '36.000'):
+            self.LimitedAB = '72'
+            self.RestrictedAB = '31'
+            self.ProhibitedAB = '10'
+        elif (self.BusVoltage >= '36.100')&(self.BusVoltage <= '46.000'):
+            self.LimitedAB = '96'
+            self.RestrictedAB = '33'
+            self.ProhibitedAB = '17'
+        else:
+            self.LimitedAB = 'Equipment_Voltage_Error'
+            self.RestrictedAB = 'Equipment_Voltage_Error'
+            self.ProhibitedAB = 'Equipment_Voltage_Error'
         
     def DisplayEquipment(self):
-        print '\nBusName :              ', self.BusName, '\nProtectiveDeviceName : ', self.ProtectiveDeviceName, '\nBusVoltage :           ', self.BusVoltage, '\nBoltedFaultCurrent :   ', self.BoltedFaultCurrent, '\nBranchCurrent :        ', self.BranchCurrent, '\nCriticalCase :         ', self.CriticalCase, '\nArcingCurrent :        ', self.ArcingCurrent, '\nTripDelayTime :        ', self.TripDelayTime, '\nFaultDuration :        ', self.FaultDuration, '\nConfiguration :        ', self.Configuration, '\nArcFlashBoundary :     ', self.ArcFlashBoundary, '\nWorkingDistance :      ', self.WorkingDistance, '\nAvailableEnergy :      ', self.AvailableEnergy, '\nPPEClass :             ', self.PPEClass, '\n****************************************\n'
+        print '\nBusName :              ', self.BusName, '\nProtectiveDeviceName : ', self.ProtectiveDeviceName, '\nBusVoltage :           ', self.BusVoltage, '\nBoltedFaultCurrent :   ', self.BoltedFaultCurrent, '\nBranchCurrent :        ', self.BranchCurrent, '\nCriticalCase :         ', self.CriticalCase, '\nArcingCurrent :        ', self.ArcingCurrent, '\nTripDelayTime :        ', self.TripDelayTime, '\nFaultDuration :        ', self.FaultDuration, '\nConfiguration :        ', self.Configuration, '\nArcFlashBoundary :     ', self.ArcFlashBoundary, '\nWorkingDistance :      ', self.WorkingDistance, '\nAvailableEnergy :      ', self.AvailableEnergy, '\nPPEClass :             ', self.PPEClass, '\n\nCalcFactor :           ', self.CalcFactor, '\nLimitedAB :            ', self.LimitedAB, '\nRestrictedAB :         ', self.RestrictedAB, '\nProhibitedAB :         ', self.ProhibitedAB, '\n****************************************\n'
+       
 
 # Styles for Excel Report
 TableText_Style = xlwt.easyxf('pattern: pattern solid, fore_colour white; font: height 200, name Arial, color-index black; border: left 2, right 2, top 2, bottom 2', num_format_str='#,##0.00')
