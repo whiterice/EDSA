@@ -4,19 +4,17 @@
 import os
 import csv
 import xlwt
-from datetime import datetime
-
-# Home Working Directory
-#os.chdir('c:/Projects/SV0002 - EDSA Report Generator/Test Directory')
-
-#Hard Drive Directory
-os.chdir('f:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory')
+import datetime as DT
 
 #Variable List
 Job_Number = 'S1234'
 Cutomer_Company = 'PowerCore'
 Customer_Buidling = 'Main Office'
 Customer_Address = '4096 Meadowbrook Drive'
+Working_Directory = 'f:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory'
+#Working_Directory = 'c:/Projects/SV0002 - EDSA Report Generator/Test Directory'
+os.chdir(Working_Directory)
+
         
 # Styles for Excel Report
 TableText_Style = xlwt.easyxf('pattern: pattern solid, fore_colour white; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.00')
@@ -144,7 +142,6 @@ class Equipment:
         ws.write(BusIteration, 11, self.AvailableEnergy, TableText_Style)
         ws.write(BusIteration, 12, self.PPEClass, self.Archeat_Style)
 
-
 # Split Data from Headings and organize into Equipment Class
 i=0
 
@@ -177,8 +174,8 @@ for EachItem in EquipmentList:
     else:
         EquipmentUNSORTED.append(Equipment(EachItem.BusName, EachItem.ProtectiveDeviceName, EachItem.BusVoltage, EachItem.BoltedFaultCurrent, EachItem.BranchCurrent, EachItem.CriticalCase, EachItem.ArcingCurrent, EachItem.TripDelayTime, EachItem.FaultDuration, EachItem.Configuration, EachItem.ArcFlashBoundary, EachItem.WorkingDistance, EachItem.AvailableEnergy, EachItem.PPEClass))
 
-
-#Export Sorting Results
+"""
+#Export Sorting Results for Testing Purposes
 for EachItem in Equipment208V:
     EachItem.DisplayEquipment()
 
@@ -196,15 +193,18 @@ for EachItem in Equipment4160V:
 
 for EachItem in EquipmentUNSORTED:
     EachItem.DisplayEquipment()
+"""
 
 #Write to Excel
-wb = xlwt.Workbook()
-ws = wb.add_sheet('208V Equipment')
-line=0
 
-for EachItem in Equipment208V:
-    EachItem.PrintArcheatTableRow(line)
-    line=line+1
+#Write to Excel Function
+def WriteExcelSheet(List):
+
+    line=0
+
+    for EachItem in List:
+        EachItem.PrintArcheatTableRow(line)
+        line=line+1
    
     ws.col(0).width=256*24
     ws.col(1).width=256*24
@@ -221,6 +221,45 @@ for EachItem in Equipment208V:
     ws.col(12).width=256*10
     ws.col(13).width=256*10
 
-Workbook_FileName = '{!s}-AF_Archeat_Tables.xls'.format(Job_Number)
+wb = xlwt.Workbook()
+
+if len(Equipment208V)!=0:
+    ws = wb.add_sheet('208V Equipment')
+    WriteExcelSheet(Equipment208V)
+else:
+    pass
+
+if len(Equipment240V)!=0:
+    ws = wb.add_sheet('240V Equipment')
+    WriteExcelSheet(Equipment240V)
+else:
+    pass
+
+if len(Equipment480V)!=0:
+    ws = wb.add_sheet('480V Equipment')
+    WriteExcelSheet(Equipment480V)
+else:
+    pass
+
+if len(Equipment600V)!=0:
+    ws = wb.add_sheet('600V Equipment')
+    WriteExcelSheet(Equipment600V)
+else:
+    pass
+
+if len(Equipment4160V)!=0:
+    ws = wb.add_sheet('4160V Equipment')
+    WriteExcelSheet(Equipment4160V)
+else:
+    pass
+
+if len(EquipmentUNSORTED)!=0:
+    ws = wb.add_sheet('UNSORTED Equipment')
+    WriteExcelSheet(EquipmentUNSORTED)
+else:
+    pass
+
+Workbook_FileName = '{!s}-AF_Archeat_Tables[{:%Y-%m-%d_%H%M%S}].xls'.format(Job_Number, DT.datetime.now())
 wb.save(Workbook_FileName)
 
+print '\n', Workbook_FileName, ' Generated', '\n'
