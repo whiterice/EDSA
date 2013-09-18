@@ -17,7 +17,7 @@ os.chdir(Working_Directory)
 
         
 # Styles for Excel Report
-TableText_Style = xlwt.easyxf('pattern: pattern solid, fore_colour white; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.00')
+TableText_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour white; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.00')
 Archeat0_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour green; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.00')
 Archeat1_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour yellow; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.00')
 Archeat2_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour orange; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.00')
@@ -38,7 +38,10 @@ EquipmentUNSORTED = []
 class Equipment:
     'Common Base Class for all Equipment'
 
-    def __init__(self, BusName, ProtectiveDeviceName, BusVoltage, BoltedFaultCurrent, BranchCurrent, CriticalCase, ArcingCurrent, TripDelayTime, FaultDuration, Configuration, ArcFlashBoundary, WorkingDistance, AvailableEnergy, PPEClass):
+    def __init__(self, BusName, ProtectiveDeviceName, BusVoltage, BoltedFaultCurrent,
+                 BranchCurrent, CriticalCase, ArcingCurrent, TripDelayTime, FaultDuration,
+                 Configuration, ArcFlashBoundary, WorkingDistance, AvailableEnergy, PPEClass):
+
         self.BusName = BusName
         self.ProtectiveDeviceName = ProtectiveDeviceName
         self.BusVoltage = BusVoltage
@@ -157,7 +160,23 @@ with open('ARCHEAT.csv') as csvfile:
 #EquipmentList[0].DisplayEquipment()
 #print(EquipmentList[0].BusVoltage)
 
+VoltagesPresent = []
+VoltagesList = []
 
+def remove_values_from_list(List, Value):
+    while Value in List:
+        List.remove(Value)
+
+for eachbus in EquipmentList:
+    VoltagesPresent.append(eachbus.BusVoltage)
+
+for eachvoltage in VoltagesPresent:
+    VoltagesList.append(eachvoltage)
+    remove_values_from_list(VoltagesPresent, eachvoltage)
+    
+print VoltagesPresent
+
+print VoltagesList
 
 # Sort Equipment by Voltages
 for EachItem in EquipmentList:
@@ -205,21 +224,24 @@ def WriteExcelSheet(List):
     for EachItem in List:
         EachItem.PrintArcheatTableRow(line)
         line=line+1
-   
+
+    #Space Before Notes and General Explanation
+    line=line+1
+
+    
     ws.col(0).width=256*24
     ws.col(1).width=256*24
-    ws.col(2).width=256*10
-    ws.col(3).width=256*10
-    ws.col(4).width=256*10
-    ws.col(5).width=256*10
-    ws.col(6).width=256*10
-    ws.col(7).width=256*10
-    ws.col(8).width=256*10
-    ws.col(9).width=256*10
-    ws.col(10).width=256*10
-    ws.col(11).width=256*10
-    ws.col(12).width=256*10
-    ws.col(13).width=256*10
+    ws.col(2).width=256*7
+    ws.col(3).width=256*7
+    ws.col(4).width=256*7
+    ws.col(5).width=256*7
+    ws.col(6).width=256*7
+    ws.col(7).width=256*7
+    ws.col(8).width=256*7
+    ws.col(9).width=256*7
+    ws.col(10).width=256*7
+    ws.col(11).width=256*8
+    ws.col(12).width=256*6
 
 wb = xlwt.Workbook()
 
