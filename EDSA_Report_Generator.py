@@ -160,6 +160,7 @@ with open('ARCHEAT.csv') as csvfile:
 #EquipmentList[0].DisplayEquipment()
 #print(EquipmentList[0].BusVoltage)
 
+#Generates The List of Voltages in the System
 VoltagesPresent = []
 VoltagesList = []
 
@@ -175,45 +176,32 @@ for eachvoltage in VoltagesPresent:
     remove_values_from_list(VoltagesPresent, eachvoltage)
     
 print VoltagesPresent
-
 print VoltagesList
 
+
+
 # Sort Equipment by Voltages
-for EachItem in EquipmentList:
-    if EachItem.BusVoltage=='0.208':
-        Equipment208V.append(Equipment(EachItem.BusName, EachItem.ProtectiveDeviceName, EachItem.BusVoltage, EachItem.BoltedFaultCurrent, EachItem.BranchCurrent, EachItem.CriticalCase, EachItem.ArcingCurrent, EachItem.TripDelayTime, EachItem.FaultDuration, EachItem.Configuration, EachItem.ArcFlashBoundary, EachItem.WorkingDistance, EachItem.AvailableEnergy, EachItem.PPEClass))
-    elif EachItem.BusVoltage=='0.240':
-        Equipment240V.append(Equipment(EachItem.BusName, EachItem.ProtectiveDeviceName, EachItem.BusVoltage, EachItem.BoltedFaultCurrent, EachItem.BranchCurrent, EachItem.CriticalCase, EachItem.ArcingCurrent, EachItem.TripDelayTime, EachItem.FaultDuration, EachItem.Configuration, EachItem.ArcFlashBoundary, EachItem.WorkingDistance, EachItem.AvailableEnergy, EachItem.PPEClass))
-    elif EachItem.BusVoltage=='0.480':
-        Equipment480V.append(Equipment(EachItem.BusName, EachItem.ProtectiveDeviceName, EachItem.BusVoltage, EachItem.BoltedFaultCurrent, EachItem.BranchCurrent, EachItem.CriticalCase, EachItem.ArcingCurrent, EachItem.TripDelayTime, EachItem.FaultDuration, EachItem.Configuration, EachItem.ArcFlashBoundary, EachItem.WorkingDistance, EachItem.AvailableEnergy, EachItem.PPEClass))
-    elif EachItem.BusVoltage=='0.600':
-        Equipment600V.append(Equipment(EachItem.BusName, EachItem.ProtectiveDeviceName, EachItem.BusVoltage, EachItem.BoltedFaultCurrent, EachItem.BranchCurrent, EachItem.CriticalCase, EachItem.ArcingCurrent, EachItem.TripDelayTime, EachItem.FaultDuration, EachItem.Configuration, EachItem.ArcFlashBoundary, EachItem.WorkingDistance, EachItem.AvailableEnergy, EachItem.PPEClass))
-    elif EachItem.BusVoltage=='4.160':
-        Equipment4160V.append(Equipment(EachItem.BusName, EachItem.ProtectiveDeviceName, EachItem.BusVoltage, EachItem.BoltedFaultCurrent, EachItem.BranchCurrent, EachItem.CriticalCase, EachItem.ArcingCurrent, EachItem.TripDelayTime, EachItem.FaultDuration, EachItem.Configuration, EachItem.ArcFlashBoundary, EachItem.WorkingDistance, EachItem.AvailableEnergy, EachItem.PPEClass))
-    else:
-        EquipmentUNSORTED.append(Equipment(EachItem.BusName, EachItem.ProtectiveDeviceName, EachItem.BusVoltage, EachItem.BoltedFaultCurrent, EachItem.BranchCurrent, EachItem.CriticalCase, EachItem.ArcingCurrent, EachItem.TripDelayTime, EachItem.FaultDuration, EachItem.Configuration, EachItem.ArcFlashBoundary, EachItem.WorkingDistance, EachItem.AvailableEnergy, EachItem.PPEClass))
+Temp=[]
+SortedEqupmentLists=[]
 
-"""
+for eachvoltage in VoltagesList:
+    for EachItem in EquipmentList:
+        if EachItem.BusVoltage==eachvoltage:
+            Temp.append(Equipment(EachItem.BusName, EachItem.ProtectiveDeviceName, EachItem.BusVoltage, EachItem.BoltedFaultCurrent, EachItem.BranchCurrent, EachItem.CriticalCase, EachItem.ArcingCurrent, EachItem.TripDelayTime, EachItem.FaultDuration, EachItem.Configuration, EachItem.ArcFlashBoundary, EachItem.WorkingDistance, EachItem.AvailableEnergy, EachItem.PPEClass))
+        else:
+            pass
+    SortedEqupmentLists.append(Temp)
+    for eachobject in Temp:
+        Temp.remove(eachobject)
+    print Temp
+
+
 #Export Sorting Results for Testing Purposes
-for EachItem in Equipment208V:
-    EachItem.DisplayEquipment()
+for eachlist in SortedEqupmentLists:
+    for eachclass in eachlist:
+        eachclass.DisplayEquipment()
 
-for EachItem in Equipment240V:
-    EachItem.DisplayEquipment()
-
-for EachItem in Equipment480V:
-    EachItem.DisplayEquipment()
-
-for EachItem in Equipment600V:
-    EachItem.DisplayEquipment()
-
-for EachItem in Equipment4160V:
-    EachItem.DisplayEquipment()
-
-for EachItem in EquipmentUNSORTED:
-    EachItem.DisplayEquipment()
 """
-
 #Write to Excel
 
 #Write to Excel Function
@@ -285,3 +273,4 @@ Workbook_FileName = '{!s}-AF_Archeat_Tables[{:%Y-%m-%d_%H%M%S}].xls'.format(Job_
 wb.save(Workbook_FileName)
 
 print '\n', Workbook_FileName, ' Generated', '\n'
+"""
