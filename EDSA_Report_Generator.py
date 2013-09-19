@@ -11,10 +11,12 @@ Job_Number = 'S1234'
 Cutomer_Company = 'PowerCore'
 Customer_Buidling = 'Main Office'
 Customer_Address = '4096 Meadowbrook Drive'
+
 Working_Directory = 'f:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory'
 #Working_Directory = 'c:/Projects/SV0002 - EDSA Report Generator/Test Directory'
 os.chdir(Working_Directory)
 
+EquipmentList=[]
         
 # Styles for Excel Report
 TableText_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour white; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
@@ -24,15 +26,6 @@ Archeat2_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern sol
 Archeat3_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour pink; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
 Archeat4_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour red; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
 ArcheatNA_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour brown; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
-
-# List Declaration
-EquipmentList = []
-Equipment208V = []
-Equipment240V = []
-Equipment600V = []
-Equipment480V = []
-Equipment4160V = []
-EquipmentUNSORTED = []
 
 #Equipment Class Declaration
 class Equipment:
@@ -99,6 +92,8 @@ class Equipment:
             self.LimitedAB = 'Equipment_Voltage_Error'
             self.RestrictedAB = 'Equipment_Voltage_Error'
             self.ProhibitedAB = 'Equipment_Voltage_Error'
+        (kV, V) = self.BusVoltage.split('.')
+        self.BusVoltageGroup = ((int(kV)*1000)+(int(V)))
 
     def __str__(self):
         names = ('BusName',
@@ -118,7 +113,8 @@ class Equipment:
                'CalcFactor',
                'LimitedAB',
                'RestrictedAB',
-               'ProhibitedAB',)
+               'ProhibitedAB',
+               'BusVoltageGroup',)
         out = []
         for n in names:
             v = getattr(self, n)
@@ -145,10 +141,6 @@ class Equipment:
         ws.write(BusIteration, 11, self.AvailableEnergy, TableText_Style)
         ws.write(BusIteration, 12, self.PPEClass, self.Archeat_Style)
 
-    def Sanitize(self):
-        (kV, V) = self.BusVoltage.split('.')
-        self.BusVoltage = ((int(kV)*1000)+(int(V)))
-
 # Split Data from Headings and organize into Equipment Class
 i=0
 
@@ -168,8 +160,6 @@ with open('ARCHEAT.csv') as csvfile:
 VoltagesPresent = []
 VoltagesList = []
 
-for eachclass in EquipmentList:
-    eachclass.Sanitize()
 """
 for eachclass in EquipmentList:
     eachclass.DisplayEquipment()
@@ -179,12 +169,27 @@ def remove_values_from_list(List, Value):
     while Value in List:
         List.remove(Value)
 
+def DuplicateSearch(List, Val):
+    Double = 0
+    for i in List:
+        if i==Val:
+            Double=1
+        else:
+            pass
+    return(Double)
+    
 for eachbus in EquipmentList:
-    VoltagesPresent.append(eachbus.BusVoltage)
+    VoltagesPresent.append(eachbus.BusVoltageGroup)
 
-for eachvoltage in VoltagesPresent:
-    VoltagesList.append(eachvoltage)
-    remove_values_from_list(VoltagesPresent, eachvoltage)
+for V1 in VoltagesPresent:
+    Repeat_flag = DuplicateSearch(VoltagesList, V1)
+    if Repeat_flag == 0:
+        VoltagesList.append(V1)
+    else:
+        pass
+
+print 'Voltages Detected: ', VoltagesList
+
 
 # Sort Equipment by Voltages
 Temp=[]
@@ -194,7 +199,7 @@ UnsortedCount =0
 
 for eachvoltage in VoltagesList:
     for EachItem in EquipmentList:
-        if EachItem.BusVoltage==eachvoltage:
+        if EachItem.BusVoltageGroup==eachvoltage:
             Temp.append(Equipment(EachItem.BusName, EachItem.ProtectiveDeviceName, EachItem.BusVoltage, EachItem.BoltedFaultCurrent, EachItem.BranchCurrent, EachItem.CriticalCase, EachItem.ArcingCurrent, EachItem.TripDelayTime, EachItem.FaultDuration, EachItem.Configuration, EachItem.ArcFlashBoundary, EachItem.WorkingDistance, EachItem.AvailableEnergy, EachItem.PPEClass))
         else:
             pass
@@ -218,7 +223,7 @@ for eachvoltage in VoltagesList:
     line=0
 
     for eachclass in SortedEquipmentLists:
-        if eachclass.BusVoltage==eachvoltage:   
+        if eachclass.BusVoltageGroup==eachvoltage:   
             eachclass.PrintArcheatTableRow(line)
             line=line+1
 
@@ -244,4 +249,5 @@ Workbook_FileName = '{!s}-AF_Archeat_Tables[{:%Y-%m-%d_%H%M%S}].xls'.format(Job_
 wb.save(Workbook_FileName)
 
 print '\n', Workbook_FileName, ' Generated', '\n'
+
 
