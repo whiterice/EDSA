@@ -17,13 +17,13 @@ os.chdir(Working_Directory)
 
         
 # Styles for Excel Report
-TableText_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour white; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.00')
-Archeat0_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour green; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.00')
-Archeat1_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour yellow; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.00')
-Archeat2_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour orange; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.00')
-Archeat3_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour pink; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.00')
-Archeat4_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour red; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.00')
-ArcheatNA_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour brown; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.00')
+TableText_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour white; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
+Archeat0_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour green; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
+Archeat1_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour yellow; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
+Archeat2_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour orange; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
+Archeat3_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour pink; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
+Archeat4_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour red; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
+ArcheatNA_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour brown; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
 
 # List Declaration
 EquipmentList = []
@@ -208,29 +208,23 @@ for eachvoltage in VoltagesList:
 
 UnsortedCount = len(EquipmentList) - UnsortedCount
 print UnsortedCount, ' pieces of Equipment were left unsorted'
+                                          
 
-"""
-for w in SortedEquipmentLists:
-    w.DisplayEquipment()
-"""                                          
-"""
 #Write to Excel
 wb = xlwt.Workbook()
 
-for eachlist in SortedEqupmentLists:
-    Voltage = eachlist[0].BusVoltage
-    ws = wb.add_sheet('{!s}kV Equipment'.format(Voltage))
-
+for eachvoltage in VoltagesList:
+    ws = wb.add_sheet('{!s}V Equipment'.format(eachvoltage))
     line=0
 
-    for eachclass in eachlist:
-        eachclass.PrintArcheatTableRow(line)
-        line=line+1
+    for eachclass in SortedEquipmentLists:
+        if eachclass.BusVoltage==eachvoltage:   
+            eachclass.PrintArcheatTableRow(line)
+            line=line+1
 
     #Space Before Notes and General Explanation
     line=line+1
-
-    
+   
     ws.col(0).width=256*24
     ws.col(1).width=256*24
     ws.col(2).width=256*7
@@ -250,4 +244,4 @@ Workbook_FileName = '{!s}-AF_Archeat_Tables[{:%Y-%m-%d_%H%M%S}].xls'.format(Job_
 wb.save(Workbook_FileName)
 
 print '\n', Workbook_FileName, ' Generated', '\n'
-"""
+
