@@ -145,6 +145,10 @@ class Equipment:
         ws.write(BusIteration, 11, self.AvailableEnergy, TableText_Style)
         ws.write(BusIteration, 12, self.PPEClass, self.Archeat_Style)
 
+    def Sanitize(self):
+        (kV, V) = self.BusVoltage.split('.')
+        self.BusVoltage = ((int(kV)*1000)+(int(V)))
+
 # Split Data from Headings and organize into Equipment Class
 i=0
 
@@ -164,6 +168,13 @@ with open('ARCHEAT.csv') as csvfile:
 VoltagesPresent = []
 VoltagesList = []
 
+for eachclass in EquipmentList:
+    eachclass.Sanitize()
+"""
+for eachclass in EquipmentList:
+    eachclass.DisplayEquipment()
+"""
+
 def remove_values_from_list(List, Value):
     while Value in List:
         List.remove(Value)
@@ -174,15 +185,12 @@ for eachbus in EquipmentList:
 for eachvoltage in VoltagesPresent:
     VoltagesList.append(eachvoltage)
     remove_values_from_list(VoltagesPresent, eachvoltage)
-    
-print VoltagesPresent
-print VoltagesList
-
-
 
 # Sort Equipment by Voltages
 Temp=[]
-SortedEqupmentLists=[]
+SortedEquipmentLists=[]
+BusesPerVoltage=[]
+UnsortedCount =0
 
 for eachvoltage in VoltagesList:
     for EachItem in EquipmentList:
@@ -190,27 +198,33 @@ for eachvoltage in VoltagesList:
             Temp.append(Equipment(EachItem.BusName, EachItem.ProtectiveDeviceName, EachItem.BusVoltage, EachItem.BoltedFaultCurrent, EachItem.BranchCurrent, EachItem.CriticalCase, EachItem.ArcingCurrent, EachItem.TripDelayTime, EachItem.FaultDuration, EachItem.Configuration, EachItem.ArcFlashBoundary, EachItem.WorkingDistance, EachItem.AvailableEnergy, EachItem.PPEClass))
         else:
             pass
-    SortedEqupmentLists.append(Temp)
     for eachobject in Temp:
-        Temp.remove(eachobject)
-    print Temp
+        SortedEquipmentLists.append(eachobject)
 
+    UnsortedCount = UnsortedCount + len(Temp)
+    print 'Sorted ', len(Temp), '/', len(EquipmentList), '...'
+    BusesPerVoltage.append(len(Temp))
+    Temp=[]
 
-#Export Sorting Results for Testing Purposes
-for eachlist in SortedEqupmentLists:
-    for eachclass in eachlist:
-        eachclass.DisplayEquipment()
+UnsortedCount = len(EquipmentList) - UnsortedCount
+print UnsortedCount, ' pieces of Equipment were left unsorted'
 
 """
+for w in SortedEquipmentLists:
+    w.DisplayEquipment()
+"""                                          
+"""
 #Write to Excel
+wb = xlwt.Workbook()
 
-#Write to Excel Function
-def WriteExcelSheet(List):
+for eachlist in SortedEqupmentLists:
+    Voltage = eachlist[0].BusVoltage
+    ws = wb.add_sheet('{!s}kV Equipment'.format(Voltage))
 
     line=0
 
-    for EachItem in List:
-        EachItem.PrintArcheatTableRow(line)
+    for eachclass in eachlist:
+        eachclass.PrintArcheatTableRow(line)
         line=line+1
 
     #Space Before Notes and General Explanation
@@ -231,43 +245,6 @@ def WriteExcelSheet(List):
     ws.col(11).width=256*8
     ws.col(12).width=256*6
 
-wb = xlwt.Workbook()
-
-if len(Equipment208V)!=0:
-    ws = wb.add_sheet('208V Equipment')
-    WriteExcelSheet(Equipment208V)
-else:
-    pass
-
-if len(Equipment240V)!=0:
-    ws = wb.add_sheet('240V Equipment')
-    WriteExcelSheet(Equipment240V)
-else:
-    pass
-
-if len(Equipment480V)!=0:
-    ws = wb.add_sheet('480V Equipment')
-    WriteExcelSheet(Equipment480V)
-else:
-    pass
-
-if len(Equipment600V)!=0:
-    ws = wb.add_sheet('600V Equipment')
-    WriteExcelSheet(Equipment600V)
-else:
-    pass
-
-if len(Equipment4160V)!=0:
-    ws = wb.add_sheet('4160V Equipment')
-    WriteExcelSheet(Equipment4160V)
-else:
-    pass
-
-if len(EquipmentUNSORTED)!=0:
-    ws = wb.add_sheet('UNSORTED Equipment')
-    WriteExcelSheet(EquipmentUNSORTED)
-else:
-    pass
 
 Workbook_FileName = '{!s}-AF_Archeat_Tables[{:%Y-%m-%d_%H%M%S}].xls'.format(Job_Number, DT.datetime.now())
 wb.save(Workbook_FileName)
