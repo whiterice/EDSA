@@ -70,7 +70,7 @@ class Equipment:
             self.Archeat_Style = ArcheatNA_Style
         else:
             self.Archeat_Style = Archeat0_Style           
-        self.CalcFactor = 1.5
+        self.CalcFactor = '1.5'
         if self.BusVoltage < '0.050':
             self.LimitedAB = 'Not Specified'
             self.RestrictedAB = 'Not Specified'
@@ -228,7 +228,7 @@ wb = xlwt.Workbook()
 
 for eachvoltage in VoltagesList:
     ws = wb.add_sheet('{!s}V Equipment'.format(eachvoltage))
-    line=0
+    line=4
 
     for eachclass in SortedEquipmentLists:
         if eachclass.BusVoltageGroup==eachvoltage:   
