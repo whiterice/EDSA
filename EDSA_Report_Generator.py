@@ -99,6 +99,7 @@ class Equipment:
             self.LimitedAB = 'Equipment_Voltage_Error'
             self.RestrictedAB = 'Equipment_Voltage_Error'
             self.ProhibitedAB = 'Equipment_Voltage_Error'
+            print ('Voltage Out of Range for {!s}.  Please Update Voltage Range').format(self.BusName)
         (kV, V) = self.BusVoltage.split('.')
         self.BusVoltageGroup = ((int(kV)*1000)+(int(V)))
 
@@ -316,5 +317,3 @@ Workbook_FileName = '{!s}-AF_Archeat_Tables[{:%Y-%m-%d_%H%M%S}].xlsx'.format(Job
 wb.save(Workbook_FileName)
 
 print '\n', Workbook_FileName, ' Generated', '\n'
-
-
