@@ -5,11 +5,13 @@ import os
 import csv
 import xlwt
 import datetime as DT
+from xlrd import open_workbook
+from xlutils.copy import copy
 
 #Variable List
 Job_Number = 'S1234'
-Cutomer_Company = 'PowerCore'
-Customer_Buidling = 'Main Office'
+Customer_Company = 'PowerCore'
+Customer_Building = 'Main Office'
 Customer_Address = '4096 Meadowbrook Drive'
 
 Working_Directory = 'f:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory'
@@ -19,6 +21,14 @@ os.chdir(Working_Directory)
 EquipmentList=[]
         
 # Styles for Excel Report
+Main_Title_Style1 = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid_fill, fore_colour pale_blue; font: height 400, name HandelGothic BT, color-index dark_blue; border: left 2, left_colour black, right 2, right_colour black, top 2, top_colour black, bottom 0, bottom_colour black', num_format_str='#,##0')
+Main_Title_Style2 = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid_fill, fore_colour pale_blue; font: height 320, name HandelGothic BT, color-index dark_blue; border: left 2, left_colour black, right 2, right_colour black, top 0, top_colour black, bottom 0, bottom_colour black', num_format_str='#,##0')
+Main_Title_Style3 = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid_fill, fore_colour pale_blue; font: height 400, name HandelGothic BT, color-index dark_red; border: left 2, left_colour black, right 2, right_colour black, top 0, top_colour black, bottom 2, bottom_colour black', num_format_str='#,##0')
+
+Headings_Style = xlwt.easyxf('alignment: rotation +90, horizontal center; pattern: pattern solid_fill, fore_colour gray50; font: height 200, name Arial Black, color-index dark_blue; border: left 2, right 2, top 2, bottom 2', num_format_str='#,##0')
+
+Gap_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour white; font: height 10, name Arial, color-index black; border: left 0, right 0, top 0, bottom 0', num_format_str='#,##0.000')
+
 TableText_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour white; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
 Archeat0_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour green; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
 Archeat1_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour yellow; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
@@ -229,7 +239,27 @@ wb = xlwt.Workbook()
 
 for eachvoltage in VoltagesList:
     ws = wb.add_sheet('{!s}V Equipment'.format(eachvoltage))
-    line=4
+
+    line=0
+
+    ws.write_merge(line, line, 1, 13, ('{!s} - {!s}').format(Customer_Company, Customer_Building), Main_Title_Style1)
+
+    line = line + 1
+ 
+    ws.write_merge(line, line, 1, 13, ('{!s}').format(Customer_Address), Main_Title_Style2)
+
+    line = line + 1
+
+    ws.write_merge(line, line, 1, 13, ('Arc Flash Analysis - {!s}V Equipment').format(eachvoltage), Main_Title_Style3)
+
+    line=line+1
+
+    q=0
+    for eachcol in Heading:
+        ws.write(line, q, eachcol, Headings_Style)
+        q = q + 1
+
+    line=line+1
 
     for eachclass in SortedEquipmentLists:
         if eachclass.BusVoltageGroup==eachvoltage:   
