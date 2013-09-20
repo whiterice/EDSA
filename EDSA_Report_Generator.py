@@ -27,6 +27,13 @@ Archeat3_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern sol
 Archeat4_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour red; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
 ArcheatNA_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour brown; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
 
+GeneralNotes_Title_Style = xlwt.easyxf('alignment: horizontal left; pattern: pattern solid, fore_colour white; font: height 360, name Calibri, color-index black;', num_format_str='#,##0')
+Explanations_Title_Style = xlwt.easyxf('alignment: horizontal left; pattern: pattern solid, fore_colour white; font: italic True, height 360, name Calibri, color-index black;', num_format_str='#,##0')
+GeneralNotesL_Style = xlwt.easyxf('alignment: horizontal left; pattern: pattern solid, fore_colour white; font: bold True, height 220, name Calibri, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0')
+GeneralNotesR_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour white; font: bold True, height 220, name Calibri, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0')
+Explanations_Style = xlwt.easyxf('alignment: wrap True, vertical top, horizontal left; pattern: pattern solid, fore_colour white; font: italic True, bold True, height 220, name Calibri, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0')
+
+
 #Equipment Class Declaration
 class Equipment:
     'Common Base Class for all Equipment'
@@ -135,11 +142,12 @@ class Equipment:
         ws.write(BusIteration, 5, self.CriticalCase, TableText_Style)
         ws.write(BusIteration, 6, self.ArcingCurrent, TableText_Style)
         ws.write(BusIteration, 7, self.TripDelayTime, TableText_Style)
-        ws.write(BusIteration, 8, self.Configuration, TableText_Style)
-        ws.write(BusIteration, 9, self.ArcFlashBoundary, TableText_Style)
-        ws.write(BusIteration, 10, self.WorkingDistance, TableText_Style)
-        ws.write(BusIteration, 11, self.AvailableEnergy, TableText_Style)
-        ws.write(BusIteration, 12, self.PPEClass, self.Archeat_Style)
+        ws.write(BusIteration, 8, self.FaultDuration, TableText_Style)
+        ws.write(BusIteration, 9, self.Configuration, TableText_Style)
+        ws.write(BusIteration, 10, self.ArcFlashBoundary, TableText_Style)
+        ws.write(BusIteration, 11, self.WorkingDistance, TableText_Style)
+        ws.write(BusIteration, 12, self.AvailableEnergy, TableText_Style)
+        ws.write(BusIteration, 13, self.PPEClass, self.Archeat_Style)
 
 # Split Data from Headings and organize into Equipment Class
 i=0
@@ -225,14 +233,19 @@ for eachvoltage in VoltagesList:
     for eachclass in SortedEquipmentLists:
         if eachclass.BusVoltageGroup==eachvoltage:   
             eachclass.PrintArcheatTableRow(line)
+            SheetCalcFactor = eachclass.CalcFactor
+            SheetLimitedAB = eachclass.LimitedAB
+            SheetRestrictedAB = eachclass.RestrictedAB
+            SheetProhibitedAB = eachclass.ProhibitedAB
             line=line+1
 
     #Space Before Notes and General Explanation
     line=line+1
-   
+
+    #Column Width Adjustments
     ws.col(0).width=256*24
     ws.col(1).width=256*24
-    ws.col(2).width=256*7
+    ws.col(2).width=256*13
     ws.col(3).width=256*7
     ws.col(4).width=256*7
     ws.col(5).width=256*7
@@ -244,8 +257,62 @@ for eachvoltage in VoltagesList:
     ws.col(11).width=256*8
     ws.col(12).width=256*6
 
+    #General Notes & Explanation
+    #Line + 0
+    ws.write(line, 0, 'General Notes:', GeneralNotes_Title_Style)
+    ws.write(line, 4, 'Explanations:', Explanations_Title_Style)
 
-Workbook_FileName = '{!s}-AF_Archeat_Tables[{:%Y-%m-%d_%H%M%S}].xls'.format(Job_Number, DT.datetime.now())
+    line=line+1
+
+    #Line + 1
+    ws.write_merge(line, line, 0, 1, 'All equipment Voltage', GeneralNotesL_Style)
+    ws.write(line, 2, eachvoltage, GeneralNotesR_Style)
+    ws.write_merge(line, line+2, 4, 7, 'Arc Flash Boundary', Explanations_Style)
+    ws.write_merge(line, line+2, 8, 13, 'Minimum distance from the arc within which a second degree burn could occur if no protective clothing is worn.', Explanations_Style)
+
+    line=line+1
+
+
+    #Line + 2
+    ws.write_merge(line, line, 0, 1, 'IEEE Calculation Factor', GeneralNotesL_Style)
+    ws.write(line, 2, SheetCalcFactor, GeneralNotesR_Style)
+
+    line=line+1
+
+
+    #Line + 3
+    ws.write_merge(line, line, 0, 1, 'Limited Approach Distance (inch)', GeneralNotesL_Style)
+    ws.write(line, 2, SheetLimitedAB, GeneralNotesR_Style)
+
+    line=line+1
+
+    #Line + 4
+    ws.write_merge(line, line, 0, 1, 'Restricted Shock Distance (inch)', GeneralNotesL_Style)
+    ws.write(line, 2, SheetRestrictedAB, GeneralNotesR_Style)
+    ws.write_merge(line, line+1, 4, 7, 'Working Distance', Explanations_Style)
+    ws.write_merge(line, line+1, 8, 13, "Closest distance a worker's body, excluding arms and hands, would be exposed to the arc.", Explanations_Style)
+
+    line=line+1
+
+
+    #Line + 5
+    ws.write_merge(line, line, 0, 1, 'Prohibited Approach Distance (inch)', GeneralNotesL_Style)
+    ws.write(line, 2, SheetProhibitedAB, GeneralNotesR_Style)
+
+    line=line+1
+
+    #Line + 6
+    ws.write_merge(line, line+1, 4, 7, 'Incident Energy', Explanations_Style)
+    ws.write_merge(line, line+1, 8, 13, 'Energy released at the specified working distance expressed in cal/cm^2', Explanations_Style)
+    line=line+2
+
+    #Line + 8
+    ws.write_merge(line, line+1, 4, 7, 'Clothing Class', Explanations_Style)
+    ws.write_merge(line, line+1, 8, 13, 'Minimum clothing class designed to protect worker from second degree burns', Explanations_Style)
+    line=line+1
+
+
+Workbook_FileName = '{!s}-AF_Archeat_Tables[{:%Y-%m-%d_%H%M%S}].xlsx'.format(Job_Number, DT.datetime.now())
 wb.save(Workbook_FileName)
 
 print '\n', Workbook_FileName, ' Generated', '\n'
