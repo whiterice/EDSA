@@ -6,7 +6,6 @@ import csv
 import xlwt
 import datetime as DT
 from xlrd import open_workbook
-from xlutils.copy import copy
 
 #Variable List
 Job_Number = 'S1234'
@@ -14,7 +13,7 @@ Customer_Company = 'PowerCore'
 Customer_Building = 'Main Office'
 Customer_Address = '4096 Meadowbrook Drive'
 
-Working_Directory = 'f:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory'
+Working_Directory = 'e:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory'
 #Working_Directory = 'c:/Projects/SV0002 - EDSA Report Generator/Test Directory'
 os.chdir(Working_Directory)
 
@@ -343,7 +342,7 @@ for eachvoltage in VoltagesList:
     line=line+1
 
 
-Workbook_FileName = '{!s}-AF_Archeat_Tables[{:%Y-%m-%d_%H%M%S}].xlsx'.format(Job_Number, DT.datetime.now())
+Workbook_FileName = '{!s}-AF_Archeat_Tables[{:%Y-%m-%d_%H%M%S}].xls'.format(Job_Number, DT.datetime.now())
 wb.save(Workbook_FileName)
 
 print '\n', Workbook_FileName, ' Generated', '\n'
