@@ -13,8 +13,8 @@ Customer_Company = 'PowerCore'
 Customer_Building = 'Main Office'
 Customer_Address = '4096 Meadowbrook Drive'
 
-Working_Directory = 'e:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory'
-#Working_Directory = 'c:/Projects/SV0002 - EDSA Report Generator/Test Directory'
+#Working_Directory = 'e:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory'
+Working_Directory = 'c:/Projects/SV0002 - EDSA Report Generator/Test Directory'
 os.chdir(Working_Directory)
 
 EquipmentList=[]
@@ -237,9 +237,11 @@ print UnsortedCount, ' pieces of Equipment were left unsorted'
 wb = xlwt.Workbook()
 
 for eachvoltage in VoltagesList:
-    ws = wb.add_sheet('{!s}V Equipment'.format(eachvoltage))
 
+    ws = wb.add_sheet('{!s}V Equipment'.format(eachvoltage))    
+  
     line=0
+
 
     ws.write_merge(line, line, 1, 13, ('{!s} - {!s}').format(Customer_Company, Customer_Building), Main_Title_Style1)
 
@@ -273,7 +275,7 @@ for eachvoltage in VoltagesList:
     line=line+1
 
     #Column Width Adjustments
-    ws.col(0).width=256*24
+    ws.col(0).width=256*32
     ws.col(1).width=256*24
     ws.col(2).width=256*13
     ws.col(3).width=256*7
@@ -286,6 +288,11 @@ for eachvoltage in VoltagesList:
     ws.col(10).width=256*7
     ws.col(11).width=256*8
     ws.col(12).width=256*6
+
+    #LOGO from Templates
+    Working_Directory = 'c:/Projects/SV0002 - EDSA Report Generator/Template'
+    os.chdir(Working_Directory)
+    ws.insert_bitmap('logo.bmp', 0, 0)
 
     #General Notes & Explanation
     #Line + 0
@@ -341,6 +348,8 @@ for eachvoltage in VoltagesList:
     ws.write_merge(line, line+1, 8, 13, 'Minimum clothing class designed to protect worker from second degree burns', Explanations_Style)
     line=line+1
 
+Working_Directory = 'c:/Projects/SV0002 - EDSA Report Generator/Test Directory'
+os.chdir(Working_Directory)
 
 Workbook_FileName = '{!s}-AF_Archeat_Tables[{:%Y-%m-%d_%H%M%S}].xls'.format(Job_Number, DT.datetime.now())
 wb.save(Workbook_FileName)
