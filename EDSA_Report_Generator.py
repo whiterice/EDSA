@@ -40,7 +40,7 @@ GeneralNotes_Title_Style = xlwt.easyxf('alignment: horizontal left; pattern: pat
 Explanations_Title_Style = xlwt.easyxf('alignment: horizontal left; pattern: pattern solid, fore_colour white; font: italic True, height 360, name Calibri, color-index black;', num_format_str='#,##0')
 GeneralNotesL_Style = xlwt.easyxf('alignment: horizontal left; pattern: pattern solid, fore_colour white; font: bold True, height 220, name Calibri, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0')
 GeneralNotesR_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour white; font: bold True, height 220, name Calibri, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0')
-Explanations_Style = xlwt.easyxf('alignment: wrap True, vertical top, horizontal left; pattern: pattern solid, fore_colour white; font: italic True, bold True, height 220, name Calibri, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0')
+Explanations_Style = xlwt.easyxf('alignment: wrap True, vertical top, horizontal left; pattern: pattern solid, fore_colour white; font: italic True, bold True, height 200, name Calibri, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0')
 
 
 #Equipment Class Declaration
@@ -295,7 +295,6 @@ for eachvoltage in VoltagesList:
     ws.insert_bitmap('logo.bmp', 0, 0)
 
     #General Notes & Explanation
-    #Line + 0
     ws.write(line, 0, 'General Notes:', GeneralNotes_Title_Style)
     ws.write(line, 4, 'Explanations:', Explanations_Title_Style)
 
@@ -341,7 +340,10 @@ for eachvoltage in VoltagesList:
     #Line + 6
     ws.write_merge(line, line+1, 4, 7, 'Incident Energy', Explanations_Style)
     ws.write_merge(line, line+1, 8, 13, 'Energy released at the specified working distance expressed in cal/cm^2', Explanations_Style)
+
     line=line+2
+
+    
 
     #Line + 8
     ws.write_merge(line, line+1, 4, 7, 'Clothing Class', Explanations_Style)
