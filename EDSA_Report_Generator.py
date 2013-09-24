@@ -238,10 +238,20 @@ wb = xlwt.Workbook()
 
 for eachvoltage in VoltagesList:
 
+    #Sheet Name
     ws = wb.add_sheet('{!s}V Equipment'.format(eachvoltage))    
-  
-    line=0
 
+    #Header and Footer
+    FOOTER = str(u"&L[{:%Y/%m/%d}]" u"&RPowerCore Engineering www.PowerCore.ca".format(DT.datetime.now()))
+    HEADER = ' '
+
+    ws.footer_str = (FOOTER)
+    ws.header_str = (HEADER)
+
+
+    #Title Block
+
+    line=0
 
     ws.write_merge(line, line, 1, 13, ('{!s} - {!s}').format(Customer_Company, Customer_Building), Main_Title_Style1)
 
@@ -255,6 +265,7 @@ for eachvoltage in VoltagesList:
 
     line=line+1
 
+    #Table Columns
     q=0
     for eachcol in Heading:
         ws.write(line, q, eachcol, Headings_Style)
@@ -262,6 +273,7 @@ for eachvoltage in VoltagesList:
 
     line=line+1
 
+    #Printe Arc Heat Info
     for eachclass in SortedEquipmentLists:
         if eachclass.BusVoltageGroup==eachvoltage:   
             eachclass.PrintArcheatTableRow(line)
@@ -350,6 +362,9 @@ for eachvoltage in VoltagesList:
     ws.write_merge(line, line+1, 8, 13, 'Minimum clothing class designed to protect worker from second degree burns', Explanations_Style)
     line=line+1
 
+    ws.horz_page_breaks = [(line+3, 0, 14)]
+    ws.vert_page_breaks = [(14, 0, line+3)]
+    
 Working_Directory = 'c:/Projects/SV0002 - EDSA Report Generator/Test Directory'
 os.chdir(Working_Directory)
 
