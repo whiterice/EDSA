@@ -29,6 +29,7 @@ Headings_Style = xlwt.easyxf('alignment: rotation +90, horizontal center; patter
 Gap_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour white; font: height 10, name Arial, color-index black; border: left 0, right 0, top 0, bottom 0', num_format_str='#,##0.000')
 
 TableText_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour white; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
+TableText_StyleL = xlwt.easyxf('alignment: horizontal left; pattern: pattern solid, fore_colour white; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
 Archeat0_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour green; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
 Archeat1_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour yellow; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
 Archeat2_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour orange; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
@@ -112,6 +113,15 @@ class Equipment:
         (kV, V) = self.BusVoltage.split('.')
         self.BusVoltageGroup = ((int(kV)*1000)+(int(V)))
 
+        if self.ProtectiveDeviceName.find('!')!=-1:
+            (a, b) = self.ProtectiveDeviceName.split('!')
+            self.ProtectiveDeviceName = str(a+b)
+        elif self.ProtectiveDeviceName.find('#')!=-1:
+            (a, b) = self.ProtectiveDeviceName.split('#')
+            self.ProtectiveDeviceName = str(a+b)
+        else:
+            pass
+
     def __str__(self):
         names = ('BusName',
                'ProtectiveDeviceName',
@@ -144,8 +154,8 @@ class Equipment:
         print str(self)
        
     def PrintArcheatTableRow(self, BusIteration):
-        ws.write(BusIteration, 0, self.BusName, TableText_Style)
-        ws.write(BusIteration, 1, self.ProtectiveDeviceName, TableText_Style)
+        ws.write(BusIteration, 0, self.BusName, TableText_StyleL)
+        ws.write(BusIteration, 1, self.ProtectiveDeviceName, TableText_StyleL)
         ws.write(BusIteration, 2, self.BusVoltage, TableText_Style)
         ws.write(BusIteration, 3, self.BoltedFaultCurrent, TableText_Style)
         ws.write(BusIteration, 4, self.BranchCurrent, TableText_Style)
