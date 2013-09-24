@@ -168,7 +168,10 @@ with open('ARCHEAT.csv') as csvfile:
         if i == 0:
             Heading = row
         else:
-            EquipmentList.append(Equipment(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13]))
+            if row[0] != '':
+                EquipmentList.append(Equipment(row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[10], row[11], row[12], row[13], row[14], row[15]))
+            else:
+                pass
         i = i+1
 
 #EquipmentList[0].DisplayEquipment()
@@ -206,17 +209,39 @@ for V1 in VoltagesPresent:
     else:
         pass
 
-print 'Voltages Detected: ', VoltagesList
+#Sort Equipment by PPEClass
+ClassList=['0', '1', '2', '3', '4', 'Danger']
+Temp1=[]
+Temp2=[]
+for eachclass in ClassList:
+    for EachItem in EquipmentList:
+        if EachItem.PPEClass==eachclass:
+            Temp1.append(Equipment(EachItem.BusName, EachItem.ProtectiveDeviceName, EachItem.BusVoltage, EachItem.BoltedFaultCurrent, EachItem.BranchCurrent, EachItem.CriticalCase, EachItem.ArcingCurrent, EachItem.TripDelayTime, EachItem.FaultDuration, EachItem.Configuration, EachItem.ArcFlashBoundary, EachItem.WorkingDistance, EachItem.AvailableEnergy, EachItem.PPEClass))
+        else:
+            pass
 
+    for eachobject in Temp1:
+        Temp2.append(eachobject)
+    Temp1=[]
+
+print 'The Vollowing Buses are of Concern:\n',  
+for eachobject in Temp2:
+    if eachobject.PPEClass=='Danger':
+        print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
+    elif eachobject.PPEClass=='4':
+        print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
+    elif eachobject.PPEClass=='3':
+        print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)    
 
 # Sort Equipment by Voltages
 Temp=[]
 SortedEquipmentLists=[]
 BusesPerVoltage=[]
 UnsortedCount =0
+print 'Voltages Detected: ', VoltagesList
 
 for eachvoltage in VoltagesList:
-    for EachItem in EquipmentList:
+    for EachItem in Temp2:
         if EachItem.BusVoltageGroup==eachvoltage:
             Temp.append(Equipment(EachItem.BusName, EachItem.ProtectiveDeviceName, EachItem.BusVoltage, EachItem.BoltedFaultCurrent, EachItem.BranchCurrent, EachItem.CriticalCase, EachItem.ArcingCurrent, EachItem.TripDelayTime, EachItem.FaultDuration, EachItem.Configuration, EachItem.ArcFlashBoundary, EachItem.WorkingDistance, EachItem.AvailableEnergy, EachItem.PPEClass))
         else:
@@ -230,8 +255,7 @@ for eachvoltage in VoltagesList:
     Temp=[]
 
 UnsortedCount = len(EquipmentList) - UnsortedCount
-print UnsortedCount, ' pieces of Equipment were left unsorted'
-                                          
+print UnsortedCount, ' pieces of Equipment were left unsorted'                                         
 
 #Write to Excel
 wb = xlwt.Workbook()
@@ -266,6 +290,10 @@ for eachvoltage in VoltagesList:
     line=line+1
 
     #Table Columns
+    a=Heading[1]
+    b=Heading[9]
+    Heading.remove(a)
+    Heading.remove(b)
     q=0
     for eachcol in Heading:
         ws.write(line, q, eachcol, Headings_Style)
@@ -362,6 +390,7 @@ for eachvoltage in VoltagesList:
     ws.write_merge(line, line+1, 8, 13, 'Minimum clothing class designed to protect worker from second degree burns', Explanations_Style)
     line=line+1
 
+    #Set Print Area
     ws.horz_page_breaks = [(line+3, 0, 14)]
     ws.vert_page_breaks = [(14, 0, line+3)]
     
