@@ -13,8 +13,9 @@ Customer_Company = 'PowerCore'
 Customer_Building = 'Main Office'
 Customer_Address = '4096 Meadowbrook Drive'
 
-#Working_Directory = 'e:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory'
-Working_Directory = 'c:/Projects/SV0002 - EDSA Report Generator/Test Directory'
+Logo_Directory = 'e:\Personal Projects\SV0002 - EDSA Report Generator/Template'
+Working_Directory = 'e:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory'
+#Working_Directory = 'c:/Projects/SV0002 - EDSA Report Generator/Test Directory'
 os.chdir(Working_Directory)
 
 EquipmentList=[]
@@ -340,8 +341,7 @@ for eachvoltage in VoltagesList:
     ws.col(12).width=256*6
 
     #LOGO from Templates
-    Working_Directory = 'c:/Projects/SV0002 - EDSA Report Generator/Template'
-    os.chdir(Working_Directory)
+    os.chdir(Logo_Directory)
     ws.insert_bitmap('logo.bmp', 0, 0)
 
     #General Notes & Explanation
@@ -404,7 +404,6 @@ for eachvoltage in VoltagesList:
     ws.horz_page_breaks = [(line+3, 0, 14)]
     ws.vert_page_breaks = [(14, 0, line+3)]
     
-Working_Directory = 'c:/Projects/SV0002 - EDSA Report Generator/Test Directory'
 os.chdir(Working_Directory)
 
 Workbook_FileName = '{!s}-AF_Archeat_Tables[{:%Y-%m-%d_%H%M%S}].xls'.format(Job_Number, DT.datetime.now())
