@@ -342,7 +342,7 @@ for eachvoltage in VoltagesList:
 
     #LOGO from Templates
     os.chdir(Logo_Directory)
-    ws.insert_bitmap('logo.bmp', 0, 0)
+    ws.insert_bitmap('logo5.bmp', 0, 0)
 
     #General Notes & Explanation
     ws.write(line, 0, 'General Notes:', GeneralNotes_Title_Style)
