@@ -129,7 +129,8 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
                 print ('Voltage Out of Range for {!s}.  Please Update Voltage Range').format(self.BusName)
             (kV, V) = self.BusVoltage.split('.')
             self.BusVoltageGroup = ((int(kV)*1000)+(int(V)))
-
+            
+            
             if self.ProtectiveDeviceName.find('!')!=-1:
                 (a, b) = self.ProtectiveDeviceName.split('!')
                 self.ProtectiveDeviceName = str(a+b)
@@ -200,6 +201,12 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
                 else:
                     pass
             i = i+1
+
+    #Table Columns
+    a=Heading[1]
+    b=Heading[9]
+    Heading.remove(a)
+    Heading.remove(b)
 
     #EquipmentList[0].DisplayEquipment()
     #print(EquipmentList[0].BusVoltage)
@@ -315,11 +322,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
 
         line=line+1
 
-        #Table Columns
-        a=Heading[1]
-        b=Heading[9]
-        Heading.remove(a)
-        Heading.remove(b)
+        
         q=0
         for eachcol in Heading:
             ws.write(line, q, eachcol, Headings_Style)
