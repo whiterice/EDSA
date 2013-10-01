@@ -8,10 +8,10 @@ import datetime as DT
 from xlrd import open_workbook
 
 #Variable List
-Job_Number = 'S1234'
-Customer_Company = 'PowerCore'
-Customer_Building = 'Main Office'
-Customer_Address = '4096 Meadowbrook Drive'
+Job_Number = 'S2756_36'
+Customer_Company = 'City of London'
+Customer_Building = 'Firehouse #3'
+Customer_Address = '550 Commissioners Road'
 
 Logo_Directory = 'e:\Personal Projects\SV0002 - EDSA Report Generator/Template'
 Working_Directory = 'e:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory'
@@ -283,7 +283,6 @@ for eachvoltage in VoltagesList:
     ws.footer_str = (FOOTER)
     ws.header_str = (HEADER)
 
-
     #Title Block
 
     line=0
@@ -403,6 +402,11 @@ for eachvoltage in VoltagesList:
     #Set Print Area
     ws.horz_page_breaks = [(line+3, 0, 14)]
     ws.vert_page_breaks = [(14, 0, line+3)]
+
+    #Set Page Witdh to 1 Page
+    ws.fit_num_pages = 1
+    ws.fit_height_to_pages = 0
+    ws.fit_width_to_pages = 1
     
 os.chdir(Working_Directory)
 
