@@ -24,6 +24,7 @@ EquipmentList=[]
 Main_Title_Style1 = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid_fill, fore_colour pale_blue; font: height 400, name HandelGothic BT, color-index dark_blue; border: left 2, left_colour black, right 2, right_colour black, top 2, top_colour black, bottom 0, bottom_colour black', num_format_str='#,##0')
 Main_Title_Style2 = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid_fill, fore_colour pale_blue; font: height 320, name HandelGothic BT, color-index dark_blue; border: left 2, left_colour black, right 2, right_colour black, top 0, top_colour black, bottom 0, bottom_colour black', num_format_str='#,##0')
 Main_Title_Style3 = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid_fill, fore_colour pale_blue; font: height 400, name HandelGothic BT, color-index dark_red; border: left 2, left_colour black, right 2, right_colour black, top 0, top_colour black, bottom 2, bottom_colour black', num_format_str='#,##0')
+Main_Title_Style4 = xlwt.easyxf('alignment: horizontal center; font: height 400, name HandelGothic BT; border: left 2, right 2, top 2, bottom 2', num_format_str='#,##0')
 
 Headings_Style = xlwt.easyxf('alignment: rotation +90, horizontal center; pattern: pattern solid_fill, fore_colour gray50; font: height 200, name Arial Black, color-index dark_blue; border: left 2, right 2, top 2, bottom 2', num_format_str='#,##0')
 
@@ -340,6 +341,7 @@ for eachvoltage in VoltagesList:
     ws.col(12).width=256*6
 
     #LOGO from Templates
+    ws.write_merge(0, 2, 0, 0, ' ', Main_Title_Style4)
     os.chdir(Logo_Directory)
     ws.insert_bitmap('logo5.bmp', 0, 0)
 
