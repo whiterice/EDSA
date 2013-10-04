@@ -430,7 +430,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
         
     os.chdir(Working_Directory)
 
-    Workbook_FileName = '{!s}-AF_Archeat_Tables[{:%Y-%m-%d_%H%M%S}].xls'.format(Job_Number, DT.datetime.now())
+    Workbook_FileName = '{!s}-AF-Archeat_Tables[{:%Y-%m-%d_%H%M%S}].xls'.format(Job_Number, DT.datetime.now())
     wb.save(Workbook_FileName)
 
     print '\n', Workbook_FileName, ' Generated', '\n'
