@@ -230,250 +230,255 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
     # Split Data from Headings and organize into Equipment Class
     i=0
 
-    with open('ARCHEAT.csv') as csvfile:
-        FileReader = csv.reader(csvfile, delimiter=',', quotechar='|')
-        for row in FileReader:
-            if i == 0:
-                Heading = row
-            else:
-                if (len(row[0]) > 3):
-                    EquipmentList.append(Equipment(row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[10], row[11], row[12], row[13], row[14], row[15]))
+    try:
+        with open('ARCHEAT.csv') as csvfile:
+            FileReader = csv.reader(csvfile, delimiter=',', quotechar='|')
+            for row in FileReader:
+                if i == 0:
+                    Heading = row
+                else:
+                    if (len(row[0]) > 3):
+                        EquipmentList.append(Equipment(row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[10], row[11], row[12], row[13], row[14], row[15]))
+                    else:
+                        pass
+                    
+
+                i = i+1
+
+
+
+        #Table Columns
+        a=Heading[1]
+        b=Heading[9]
+        Heading.remove(a)
+        Heading.remove(b)
+
+        #EquipmentList[0].DisplayEquipment()
+        #print(EquipmentList[0].BusVoltage)
+
+        #Generates The List of Voltages in the System
+        VoltagesPresent = []
+        VoltagesList = []
+
+        """
+        for eachclass in EquipmentList:
+            eachclass.DisplayEquipment()
+        """
+
+        def remove_values_from_list(List, Value):
+            while Value in List:
+                List.remove(Value)
+
+        def DuplicateSearch(List, Val):
+            Double = 0
+            for i in List:
+                if i==Val:
+                    Double=1
                 else:
                     pass
-                
+            return(Double)
+            
+        for eachbus in EquipmentList:
+            VoltagesPresent.append(eachbus.BusVoltageGroup)
 
-            i = i+1
-
-    #Table Columns
-    a=Heading[1]
-    b=Heading[9]
-    Heading.remove(a)
-    Heading.remove(b)
-
-    #EquipmentList[0].DisplayEquipment()
-    #print(EquipmentList[0].BusVoltage)
-
-    #Generates The List of Voltages in the System
-    VoltagesPresent = []
-    VoltagesList = []
-
-    """
-    for eachclass in EquipmentList:
-        eachclass.DisplayEquipment()
-    """
-
-    def remove_values_from_list(List, Value):
-        while Value in List:
-            List.remove(Value)
-
-    def DuplicateSearch(List, Val):
-        Double = 0
-        for i in List:
-            if i==Val:
-                Double=1
-            else:
-                pass
-        return(Double)
-        
-    for eachbus in EquipmentList:
-        VoltagesPresent.append(eachbus.BusVoltageGroup)
-
-    for V1 in VoltagesPresent:
-        Repeat_flag = DuplicateSearch(VoltagesList, V1)
-        if Repeat_flag == 0:
-            VoltagesList.append(V1)
-        else:
-            pass
-
-    #Sort Equipment by PPEClass
-    ClassList=['0', '1', '2', '3', '4', 'Danger']
-    Temp1=[]
-    Temp2=[]
-    for eachclass in ClassList:
-        for EachItem in EquipmentList:
-            if EachItem.PPEClass==eachclass:
-                Temp1.append(Equipment(EachItem.BusName, EachItem.ProtectiveDeviceName, EachItem.BusVoltage, EachItem.BoltedFaultCurrent, EachItem.BranchCurrent, EachItem.CriticalCase, EachItem.ArcingCurrent, EachItem.TripDelayTime, EachItem.FaultDuration, EachItem.Configuration, EachItem.ArcFlashBoundary, EachItem.WorkingDistance, EachItem.AvailableEnergy, EachItem.PPEClass))
+        for V1 in VoltagesPresent:
+            Repeat_flag = DuplicateSearch(VoltagesList, V1)
+            if Repeat_flag == 0:
+                VoltagesList.append(V1)
             else:
                 pass
 
-        for eachobject in Temp1:
-            Temp2.append(eachobject)
+        #Sort Equipment by PPEClass
+        ClassList=['0', '1', '2', '3', '4', 'Danger']
         Temp1=[]
+        Temp2=[]
+        for eachclass in ClassList:
+            for EachItem in EquipmentList:
+                if EachItem.PPEClass==eachclass:
+                    Temp1.append(Equipment(EachItem.BusName, EachItem.ProtectiveDeviceName, EachItem.BusVoltage, EachItem.BoltedFaultCurrent, EachItem.BranchCurrent, EachItem.CriticalCase, EachItem.ArcingCurrent, EachItem.TripDelayTime, EachItem.FaultDuration, EachItem.Configuration, EachItem.ArcFlashBoundary, EachItem.WorkingDistance, EachItem.AvailableEnergy, EachItem.PPEClass))
+                else:
+                    pass
 
-    print 'The Vollowing Buses are of Concern:\n',  
-    for eachobject in Temp2:
-        if eachobject.PPEClass=='Danger':
-            print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
-        elif eachobject.PPEClass=='4':
-            print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
-        elif eachobject.PPEClass=='3':
-            print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)    
+            for eachobject in Temp1:
+                Temp2.append(eachobject)
+            Temp1=[]
 
-    # Sort Equipment by Voltages
-    Temp=[]
-    SortedEquipmentLists=[]
-    BusesPerVoltage=[]
-    UnsortedCount =0
-    print 'Voltages Detected: ', VoltagesList
+        print 'The Vollowing Buses are of Concern:\n',  
+        for eachobject in Temp2:
+            if eachobject.PPEClass=='Danger':
+                print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
+            elif eachobject.PPEClass=='4':
+                print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
+            elif eachobject.PPEClass=='3':
+                print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)    
 
-    for eachvoltage in VoltagesList:
-        for EachItem in Temp2:
-            if EachItem.BusVoltageGroup==eachvoltage:
-                Temp.append(Equipment(EachItem.BusName, EachItem.ProtectiveDeviceName, EachItem.BusVoltage, EachItem.BoltedFaultCurrent, EachItem.BranchCurrent, EachItem.CriticalCase, EachItem.ArcingCurrent, EachItem.TripDelayTime, EachItem.FaultDuration, EachItem.Configuration, EachItem.ArcFlashBoundary, EachItem.WorkingDistance, EachItem.AvailableEnergy, EachItem.PPEClass))
-            else:
-                pass
-        for eachobject in Temp:
-            SortedEquipmentLists.append(eachobject)
-
-        UnsortedCount = UnsortedCount + len(Temp)
-        print 'Sorted ', len(Temp), '/', len(EquipmentList), '...'
-        BusesPerVoltage.append(len(Temp))
+        # Sort Equipment by Voltages
         Temp=[]
+        SortedEquipmentLists=[]
+        BusesPerVoltage=[]
+        UnsortedCount =0
+        print 'Voltages Detected: ', VoltagesList
 
-    UnsortedCount = len(EquipmentList) - UnsortedCount
-    print UnsortedCount, ' pieces of Equipment were left unsorted'                                         
+        for eachvoltage in VoltagesList:
+            for EachItem in Temp2:
+                if EachItem.BusVoltageGroup==eachvoltage:
+                    Temp.append(Equipment(EachItem.BusName, EachItem.ProtectiveDeviceName, EachItem.BusVoltage, EachItem.BoltedFaultCurrent, EachItem.BranchCurrent, EachItem.CriticalCase, EachItem.ArcingCurrent, EachItem.TripDelayTime, EachItem.FaultDuration, EachItem.Configuration, EachItem.ArcFlashBoundary, EachItem.WorkingDistance, EachItem.AvailableEnergy, EachItem.PPEClass))
+                else:
+                    pass
+            for eachobject in Temp:
+                SortedEquipmentLists.append(eachobject)
 
-    #Write to Excel
-    wb = xlwt.Workbook()
+            UnsortedCount = UnsortedCount + len(Temp)
+            print 'Sorted ', len(Temp), '/', len(EquipmentList), '...'
+            BusesPerVoltage.append(len(Temp))
+            Temp=[]
 
-    for eachvoltage in VoltagesList:
+        UnsortedCount = len(EquipmentList) - UnsortedCount
+        print UnsortedCount, ' pieces of Equipment were left unsorted'                                         
 
-        #Sheet Name
-        ws = wb.add_sheet('{!s}V Equipment'.format(eachvoltage))    
+        #Write to Excel
+        wb = xlwt.Workbook()
 
-        #Header and Footer
-        FOOTER = str(u"&L[{:%Y/%m/%d}]" u"&RPowerCore Engineering www.PowerCore.ca".format(DT.datetime.now()))
-        HEADER = ' '
+        for eachvoltage in VoltagesList:
 
-        ws.footer_str = (FOOTER)
-        ws.header_str = (HEADER)
+            #Sheet Name
+            ws = wb.add_sheet('{!s}V Equipment'.format(eachvoltage))    
 
-        #Title Block
+            #Header and Footer
+            FOOTER = str(u"&L[{:%Y/%m/%d}]" u"&RPowerCore Engineering www.PowerCore.ca".format(DT.datetime.now()))
+            HEADER = ' '
 
-        line=0
+            ws.footer_str = (FOOTER)
+            ws.header_str = (HEADER)
 
-        ws.write_merge(line, line, 1, 13, ('{!s} - {!s}').format(Customer_Company, Customer_Building), Main_Title_Style1)
+            #Title Block
 
-        line = line + 1
-     
-        ws.write_merge(line, line, 1, 13, ('{!s}').format(Customer_Address), Main_Title_Style2)
+            line=0
 
-        line = line + 1
+            ws.write_merge(line, line, 1, 13, ('{!s} - {!s}').format(Customer_Company, Customer_Building), Main_Title_Style1)
 
-        ws.write_merge(line, line, 1, 13, ('Arc Flash Analysis - {!s}V Equipment').format(eachvoltage), Main_Title_Style3)
+            line = line + 1
+         
+            ws.write_merge(line, line, 1, 13, ('{!s}').format(Customer_Address), Main_Title_Style2)
 
-        line=line+1
+            line = line + 1
 
-        
-        q=0
-        for eachcol in Heading:
-            ws.write(line, q, eachcol, Headings_Style)
-            q = q + 1
+            ws.write_merge(line, line, 1, 13, ('Arc Flash Analysis - {!s}V Equipment').format(eachvoltage), Main_Title_Style3)
 
-        line=line+1
+            line=line+1
 
-        #Printe Arc Heat Info
-        for eachclass in SortedEquipmentLists:
-            if eachclass.BusVoltageGroup==eachvoltage:   
-                eachclass.PrintArcheatTableRow(line)
-                SheetCalcFactor = eachclass.CalcFactor
-                SheetLimitedAB = eachclass.LimitedAB
-                SheetRestrictedAB = eachclass.RestrictedAB
-                SheetProhibitedAB = eachclass.ProhibitedAB
-                line=line+1
+            
+            q=0
+            for eachcol in Heading:
+                ws.write(line, q, eachcol, Headings_Style)
+                q = q + 1
 
-        #Space Before Notes and General Explanation
-        line=line+1
+            line=line+1
 
-        #Column Width Adjustments
-        ws.col(0).width=256*32
-        ws.col(1).width=256*24
-        ws.col(2).width=256*13
-        ws.col(3).width=256*7
-        ws.col(4).width=256*7
-        ws.col(5).width=256*7
-        ws.col(6).width=256*7
-        ws.col(7).width=256*7
-        ws.col(8).width=256*7
-        ws.col(9).width=256*7
-        ws.col(10).width=256*7
-        ws.col(11).width=256*8
-        ws.col(12).width=256*6
+            #Printe Arc Heat Info
+            for eachclass in SortedEquipmentLists:
+                if eachclass.BusVoltageGroup==eachvoltage:   
+                    eachclass.PrintArcheatTableRow(line)
+                    SheetCalcFactor = eachclass.CalcFactor
+                    SheetLimitedAB = eachclass.LimitedAB
+                    SheetRestrictedAB = eachclass.RestrictedAB
+                    SheetProhibitedAB = eachclass.ProhibitedAB
+                    line=line+1
 
-        #LOGO from Templates
-        ws.write_merge(0, 2, 0, 0, ' ', Main_Title_Style4)
-        os.chdir(Logo_Directory)
-        ws.insert_bitmap('logo5.bmp', 0, 0)
+            #Space Before Notes and General Explanation
+            line=line+1
 
-        #General Notes & Explanation
-        ws.write(line, 0, 'General Notes:', GeneralNotes_Title_Style)
-        ws.write(line, 4, 'Explanations:', Explanations_Title_Style)
+            #Column Width Adjustments
+            ws.col(0).width=256*32
+            ws.col(1).width=256*24
+            ws.col(2).width=256*13
+            ws.col(3).width=256*7
+            ws.col(4).width=256*7
+            ws.col(5).width=256*7
+            ws.col(6).width=256*7
+            ws.col(7).width=256*7
+            ws.col(8).width=256*7
+            ws.col(9).width=256*7
+            ws.col(10).width=256*7
+            ws.col(11).width=256*8
+            ws.col(12).width=256*6
 
-        line=line+1
+            #LOGO from Templates
+            ws.write_merge(0, 2, 0, 0, ' ', Main_Title_Style4)
+            os.chdir(Logo_Directory)
+            ws.insert_bitmap('logo5.bmp', 0, 0)
 
-        #Line + 1
-        ws.write_merge(line, line, 0, 1, 'All equipment Voltage', GeneralNotesL_Style)
-        ws.write(line, 2, eachvoltage, GeneralNotesR_Style)
-        ws.write_merge(line, line+2, 4, 7, 'Arc Flash Boundary', Explanations_Style)
-        ws.write_merge(line, line+2, 8, 13, 'Minimum distance from the arc within which a second degree burn could occur if no protective clothing is worn.', Explanations_Style)
+            #General Notes & Explanation
+            ws.write(line, 0, 'General Notes:', GeneralNotes_Title_Style)
+            ws.write(line, 4, 'Explanations:', Explanations_Title_Style)
 
-        line=line+1
+            line=line+1
 
+            #Line + 1
+            ws.write_merge(line, line, 0, 1, 'All equipment Voltage', GeneralNotesL_Style)
+            ws.write(line, 2, eachvoltage, GeneralNotesR_Style)
+            ws.write_merge(line, line+2, 4, 7, 'Arc Flash Boundary', Explanations_Style)
+            ws.write_merge(line, line+2, 8, 13, 'Minimum distance from the arc within which a second degree burn could occur if no protective clothing is worn.', Explanations_Style)
 
-        #Line + 2
-        ws.write_merge(line, line, 0, 1, 'IEEE Calculation Factor', GeneralNotesL_Style)
-        ws.write(line, 2, SheetCalcFactor, GeneralNotesR_Style)
-
-        line=line+1
-
-
-        #Line + 3
-        ws.write_merge(line, line, 0, 1, 'Limited Approach Distance (inch)', GeneralNotesL_Style)
-        ws.write(line, 2, SheetLimitedAB, GeneralNotesR_Style)
-
-        line=line+1
-
-        #Line + 4
-        ws.write_merge(line, line, 0, 1, 'Restricted Shock Distance (inch)', GeneralNotesL_Style)
-        ws.write(line, 2, SheetRestrictedAB, GeneralNotesR_Style)
-        ws.write_merge(line, line+1, 4, 7, 'Working Distance', Explanations_Style)
-        ws.write_merge(line, line+1, 8, 13, "Closest distance a worker's body, excluding arms and hands, would be exposed to the arc.", Explanations_Style)
-
-        line=line+1
+            line=line+1
 
 
-        #Line + 5
-        ws.write_merge(line, line, 0, 1, 'Prohibited Approach Distance (inch)', GeneralNotesL_Style)
-        ws.write(line, 2, SheetProhibitedAB, GeneralNotesR_Style)
+            #Line + 2
+            ws.write_merge(line, line, 0, 1, 'IEEE Calculation Factor', GeneralNotesL_Style)
+            ws.write(line, 2, SheetCalcFactor, GeneralNotesR_Style)
 
-        line=line+1
+            line=line+1
 
-        #Line + 6
-        ws.write_merge(line, line+1, 4, 7, 'Incident Energy', Explanations_Style)
-        ws.write_merge(line, line+1, 8, 13, 'Energy released at the specified working distance expressed in cal/cm^2', Explanations_Style)
 
-        line=line+2
+            #Line + 3
+            ws.write_merge(line, line, 0, 1, 'Limited Approach Distance (inch)', GeneralNotesL_Style)
+            ws.write(line, 2, SheetLimitedAB, GeneralNotesR_Style)
 
-        
+            line=line+1
 
-        #Line + 8
-        ws.write_merge(line, line+1, 4, 7, 'Clothing Class', Explanations_Style)
-        ws.write_merge(line, line+1, 8, 13, 'Minimum clothing class designed to protect worker from second degree burns', Explanations_Style)
-        line=line+1
+            #Line + 4
+            ws.write_merge(line, line, 0, 1, 'Restricted Shock Distance (inch)', GeneralNotesL_Style)
+            ws.write(line, 2, SheetRestrictedAB, GeneralNotesR_Style)
+            ws.write_merge(line, line+1, 4, 7, 'Working Distance', Explanations_Style)
+            ws.write_merge(line, line+1, 8, 13, "Closest distance a worker's body, excluding arms and hands, would be exposed to the arc.", Explanations_Style)
 
-        #Set Print Area
-        ws.horz_page_breaks = [(line+3, 0, 14)]
-        ws.vert_page_breaks = [(14, 0, line+3)]
+            line=line+1
 
-        #Set Page Witdh to 1 Page
-        ws.fit_num_pages = 1
-        ws.fit_height_to_pages = 0
-        ws.fit_width_to_pages = 1
-        
-    os.chdir(Working_Directory)
 
-    Workbook_FileName = '{!s}-AF-Archeat_Tables[{:%Y-%m-%d_%H%M%S}].xls'.format(Job_Number, DT.datetime.now())
-    wb.save(Workbook_FileName)
+            #Line + 5
+            ws.write_merge(line, line, 0, 1, 'Prohibited Approach Distance (inch)', GeneralNotesL_Style)
+            ws.write(line, 2, SheetProhibitedAB, GeneralNotesR_Style)
 
-    print '\n', Workbook_FileName, ' Generated', '\n'
+            line=line+1
 
+            #Line + 6
+            ws.write_merge(line, line+1, 4, 7, 'Incident Energy', Explanations_Style)
+            ws.write_merge(line, line+1, 8, 13, 'Energy released at the specified working distance expressed in cal/cm^2', Explanations_Style)
+
+            line=line+2
+
+            
+
+            #Line + 8
+            ws.write_merge(line, line+1, 4, 7, 'Clothing Class', Explanations_Style)
+            ws.write_merge(line, line+1, 8, 13, 'Minimum clothing class designed to protect worker from second degree burns', Explanations_Style)
+            line=line+1
+
+            #Set Print Area
+            ws.horz_page_breaks = [(line+3, 0, 14)]
+            ws.vert_page_breaks = [(14, 0, line+3)]
+
+            #Set Page Witdh to 1 Page
+            ws.fit_num_pages = 1
+            ws.fit_height_to_pages = 0
+            ws.fit_width_to_pages = 1
+            
+        os.chdir(Working_Directory)
+
+        Workbook_FileName = '{!s}-AF-Archeat_Tables[{:%Y-%m-%d_%H%M%S}].xls'.format(Job_Number, DT.datetime.now())
+        wb.save(Workbook_FileName)
+
+        print '\n', Workbook_FileName, ' Generated', '\n'
+
+    except:
+        print "\n\nNo Valide ARCHEAT.csv File Located!"
