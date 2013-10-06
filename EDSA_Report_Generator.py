@@ -33,7 +33,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
     #Variable List
 
 
-    Logo_Directory = 'e:\Personal Projects\SV0002 - EDSA Report Generator/Template'
+    Logo_Directory = 'c:\Report Generator/Template'
     os.chdir(Working_Directory)
 
     EquipmentList=[]
