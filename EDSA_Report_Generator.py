@@ -10,7 +10,10 @@ from xlrd import open_workbook
 def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Address, Working_Directory):
 
     """
-    Job_Number = 'S2756_36'
+    ArcheatTable('S2756_36', 'City of London', 'Firehouse #3', '550 Commissioners Road', 'e:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory')
+
+
+    Job_Number = 'S2756_36',
     Customer_Company = 'City of London'
     Customer_Building = 'Firehouse #3'
     Customer_Address = '550 Commissioners Road'
@@ -83,6 +86,45 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
             self.WorkingDistance = WorkingDistance
             self.AvailableEnergy = AvailableEnergy
             self.PPEClass = PPEClass
+
+            #PDC Missmatch Sanitization
+            if self.ProtectiveDeviceName.find('!')!=-1:
+                (a, b) = self.ProtectiveDeviceName.split('!')
+                self.ProtectiveDeviceName = str(a+b)
+            elif self.ProtectiveDeviceName.find('#')!=-1:
+                (a, b) = self.ProtectiveDeviceName.split('#')
+                self.ProtectiveDeviceName = str(a+b)
+            else:
+                pass
+
+            #Direct csv file Sanitization
+            names = ('BusName',
+                   'ProtectiveDeviceName',
+                   'BusVoltage',
+                   'BoltedFaultCurrent',
+                   'BranchCurrent',
+                   'CriticalCase',
+                   'ArcingCurrent',
+                   'TripDelayTime',
+                   'FaultDuration',
+                   'Configuration',
+                   'ArcFlashBoundary',
+                   'WorkingDistance',
+                   'AvailableEnergy',
+                   'PPEClass',)
+            
+            for n in names:
+                v = getattr(self, n)
+                v=str(v)
+                if (v.find('"')!=-1):
+                    (a, info, c) = v.split('"')
+                    setattr(self, n, info)
+                    z=getattr(self, n) 
+                else:
+                    pass
+
+
+            #Set Archeat Colours
             if self.PPEClass=='0' :
                 self.Archeat_Style = Archeat0_Style
             elif self.PPEClass=='1' :
@@ -96,8 +138,12 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
             elif self.PPEClass=='NA' :
                 self.Archeat_Style = ArcheatNA_Style
             else:
-                self.Archeat_Style = Archeat0_Style           
+                self.Archeat_Style = Archeat0_Style
+
+            # Set Calc Factor
             self.CalcFactor = '1.5'
+
+            #Setup Arc Flash Boundaries
             if self.BusVoltage < '0.050':
                 self.LimitedAB = 'Not Specified'
                 self.RestrictedAB = 'Not Specified'
@@ -127,18 +173,12 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
                 self.RestrictedAB = 'Equipment_Voltage_Error'
                 self.ProhibitedAB = 'Equipment_Voltage_Error'
                 print ('Voltage Out of Range for {!s}.  Please Update Voltage Range').format(self.BusName)
+
+            #Voltage Sanitize
             (kV, V) = self.BusVoltage.split('.')
             self.BusVoltageGroup = ((int(kV)*1000)+(int(V)))
             
             
-            if self.ProtectiveDeviceName.find('!')!=-1:
-                (a, b) = self.ProtectiveDeviceName.split('!')
-                self.ProtectiveDeviceName = str(a+b)
-            elif self.ProtectiveDeviceName.find('#')!=-1:
-                (a, b) = self.ProtectiveDeviceName.split('#')
-                self.ProtectiveDeviceName = str(a+b)
-            else:
-                pass
 
         def __str__(self):
             names = ('BusName',
@@ -196,10 +236,12 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
             if i == 0:
                 Heading = row
             else:
-                if row[0] != '':
+                if (len(row[0]) > 3):
                     EquipmentList.append(Equipment(row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[10], row[11], row[12], row[13], row[14], row[15]))
                 else:
                     pass
+                
+
             i = i+1
 
     #Table Columns
