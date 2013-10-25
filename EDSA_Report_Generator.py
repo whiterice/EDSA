@@ -246,13 +246,33 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
             i = i+1
 
 
-
-    #Table Columns
+    #Remove Unwanted Table Columns
     a=Heading[1]
     b=Heading[9]
     Heading.remove(a)
     Heading.remove(b)
 
+    #Sanitize Headings
+    Headings_Pure = []
+    for h in Heading:
+        if (h.find('"')!=-1):
+            (a, info, c) = h.split('"')
+            Headings_Pure.append(info)
+        else:
+            Headings_Pure.append(h)
+
+    index = []
+    q = 0
+    for h in Headings_Pure:
+        if (h == ''):
+            index.append(q)
+        else:
+            pass
+        q=q+1
+
+    for h in index:
+        Headings_Pure.remove(Headings_Pure[h])
+    
     #EquipmentList[0].DisplayEquipment()
     #print(EquipmentList[0].BusVoltage)
 
@@ -369,7 +389,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
 
         
         q=0
-        for eachcol in Heading:
+        for eachcol in Headings_Pure:
             ws.write(line, q, eachcol, Headings_Style)
             q = q + 1
 
