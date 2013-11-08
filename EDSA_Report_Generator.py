@@ -323,7 +323,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
             Temp2.append(eachobject)
         Temp1=[]
 
-    print 'The Vollowing Buses are of Concern:\n',  
+    print 'The Following Buses are of Concern:\n',  
     for eachobject in Temp2:
         if eachobject.PPEClass=='Danger':
             print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
