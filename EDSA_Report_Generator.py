@@ -154,7 +154,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
                 self.ProhibitedAB = 'Avoid Contact'
             elif (self.BusVoltage >= '0.301')&(self.BusVoltage <= '0.750'):
                 self.LimitedAB = '42'
-                self.RestrictedAB = '1'
+                self.RestrictedAB = '12'
                 self.ProhibitedAB = '1'
             elif (self.BusVoltage >= '0.751')&(self.BusVoltage <= '15.000'):
                 self.LimitedAB = '60'
@@ -237,7 +237,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
             if i == 0:
                 Heading = row
             else:
-                if (len(row[0]) > 3):
+                if (len(row[0]) > 2):
                     EquipmentList.append(Equipment(row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[10], row[11], row[12], row[13], row[14], row[15]))
                 else:
                     pass
