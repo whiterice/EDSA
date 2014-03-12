@@ -4,7 +4,7 @@ import os
 print "****************************\n*Arc Flash Report Generator*\n****************************"
 
 GUI_dir=os.getcwd()
-os.chdir('../Test Directory/S2777-City Of London Arc Flash 2013')
+os.chdir('../Test Directory/S2828-Presstran Industries Arc Flash 2014')
 Available_Options=os.listdir(os.getcwd())
 
 Full_Path = os.getcwd()
@@ -69,6 +69,14 @@ while resp!='y':
 
     print '\nIs This Correct?'
     resp = str(raw_input())
+
+
+###Foreced Values
+##Customer_Address = '170 Edward St., St. Thomas ON'
+##Customer_Building = 'New 480V Line'
+##Customer_Company = 'Presstran Industries'
+##Job_Number = 'S2828'
+##Working_Directory = 'E:\Personal Projects\SV0002 - EDSA Report Generator\Test Directory\S2828-Presstran Industries Arc Flash 2014\S2828 - New 480V Line'
 
 #os.chdir(GUI_dir)
 EDSA_Report_Generator.ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Address,
