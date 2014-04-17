@@ -415,9 +415,10 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
         ws.col(12).width=256*6
 
         #LOGO from Templates
-        ws.write_merge(0, 2, 0, 0, ' ', Main_Title_Style4)
         os.chdir(Logo_Directory)
+        ws.write_merge(0, 2, 0, 0, ' ', Main_Title_Style4)
         ws.insert_bitmap('logo5.bmp', 0, 0)
+     
 
         #General Notes & Explanation
         ws.write(line, 0, 'General Notes:', GeneralNotes_Title_Style)
