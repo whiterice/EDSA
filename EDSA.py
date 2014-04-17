@@ -10,20 +10,11 @@ from xlrd import open_workbook
 def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Address, Working_Directory):
 
     """
-    ArcheatTable('S2756_36', 'City of London', 'Firehouse #3', '550 Commissioners Road', 'e:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory')
-
-
     Job_Number = 'S2756_36',
     Customer_Company = 'City of London'
     Customer_Building = 'Firehouse #3'
     Customer_Address = '550 Commissioners Road'
     Working_Directory = 'e:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory'
-
-    
-    Logo_Directory = 'e:\Personal Projects\SV0002 - EDSA Report Generator/Template'
-    #Working_Directory = 'c:/Projects/SV0002 - EDSA Report Generator/Test Directory'
-    os.chdir(Working_Directory)
-
     """
 
     #Working_Directory = 'e:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory'
