@@ -24,7 +24,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
     #Variable List
 
 
-    Logo_Directory = 'c:\Report Generator/Template'
+    Logo_Directory = 'c:\SVEXE\Archeat Table Generator\Template'
     os.chdir(Working_Directory)
 
     EquipmentList=[]
@@ -166,9 +166,9 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
                 print ('Voltage Out of Range for {!s}.  Please Update Voltage Range').format(self.BusName)
 
             #Voltage Sanitize
-            (kV, V) = self.BusVoltage.split('.')
-            self.BusVoltageGroup = ((int(kV)*1000)+(int(V)))
-            
+            #(kV, V) = self.BusVoltage.split('.')
+            #self.BusVoltageGroup = ((int(kV)*1000)+(int(V)))
+            self.BusVoltageGroup = int(float(self.BusVoltage)*1000)
             
 
         def __str__(self):
