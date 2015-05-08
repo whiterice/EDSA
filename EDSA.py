@@ -1,11 +1,13 @@
 # EDSA Report Generator
 
 # Imported Modules
+import sys
 import os
 import csv
 import xlwt
 import datetime as DT
 from xlrd import open_workbook
+import argparse
 
 def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Address, Working_Directory):
 
@@ -316,6 +318,11 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
             Temp2.append(eachobject)
         Temp1=[]
 
+    #Sanitize PPE Classes
+    for eachobject in Temp2:
+        if eachobject.PPEClass=='N/A':
+            eachobject.PPEClass='Danger'
+
     print 'The Following Buses are of Concern:\n',  
     for eachobject in Temp2:
         if eachobject.PPEClass=='Danger':
@@ -491,10 +498,36 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
         
     os.chdir(Working_Directory)
 
+    global Workbook_FileName
+    
     Workbook_FileName = '{!s}-AF-Archeat_Tables[{:%Y-%m-%d_%H%M%S}].xls'.format(Job_Number, DT.datetime.now())
     wb.save(Workbook_FileName)
 
-    print '\n', Workbook_FileName, ' Generated', '\n'
+    #print '\n', Workbook_FileName, ' Generated', '\n'
 
     #except:
         #print "\n\nNo Valide ARCHEAT.csv File Located!"
+
+def main():
+
+    parser = argparse.ArgumentParser(description='Cleans DWG Properties once Exported from AutoCAD')
+    parser.add_argument('Job_Num', help='Job Number (ie. S2876)')
+    parser.add_argument('Customer_Comp', help='Customer')
+    parser.add_argument('Customer_Build', help='Location')
+    parser.add_argument('Customer_Add', help='Address')
+    parser.add_argument('Working_Dir', help='working directory')
+    args = parser.parse_args()
+
+    ArcheatTable(args.Job_Num, args.Customer_Comp, args.Customer_Build, args.Customer_Add, args.Working_Dir)
+
+
+    os.chdir(args.Working_Dir)
+
+   
+    print '\n', Workbook_FileName, ' Generated', '\n'
+    
+
+if __name__ == '__main__':
+    main()
+    sys.exit()
+
