@@ -9,14 +9,15 @@ import datetime as DT
 from xlrd import open_workbook
 import argparse
 
+
 def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Address, Working_Directory):
 
     """
-    Job_Number = 'S2756_36',
-    Customer_Company = 'City of London'
-    Customer_Building = 'Firehouse #3'
-    Customer_Address = '550 Commissioners Road'
-    Working_Directory = 'e:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory'
+    Job_Number = 'S2913',
+    Customer_Company = 'Sifto'
+    Customer_Building = 'Sifto Evaporator Plant'
+    Customer_Address = 'Goderich'
+    Working_Directory = 'd:\Scott\Scripts\Python\Report Generator\Test\'
     """
 
     #Working_Directory = 'e:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory'
@@ -143,11 +144,11 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
                 self.LimitedAB = 'Not Specified'
                 self.RestrictedAB = 'Not Specified'
                 self.ProhibitedAB = 'Not Specified'
-            elif (self.BusVoltage >= '0.050')&(self.BusVoltage <= '0.300'):
+            elif (self.BusVoltage >= '0.050')&(self.BusVoltage <= '0.150'):
                 self.LimitedAB = '42'
                 self.RestrictedAB = 'Avoid Contact'
                 self.ProhibitedAB = 'Avoid Contact'
-            elif (self.BusVoltage >= '0.301')&(self.BusVoltage <= '0.750'):
+            elif (self.BusVoltage >= '0.151')&(self.BusVoltage <= '0.750'):
                 self.LimitedAB = '42'
                 self.RestrictedAB = '12'
                 self.ProhibitedAB = '1'
@@ -155,11 +156,11 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
                 self.LimitedAB = '60'
                 self.RestrictedAB = '26'
                 self.ProhibitedAB = '7'
-            elif (self.BusVoltage >= '15.100')&(self.BusVoltage <= '36.000'):
+            elif (self.BusVoltage >= '15.001')&(self.BusVoltage <= '36.000'):
                 self.LimitedAB = '72'
                 self.RestrictedAB = '31'
                 self.ProhibitedAB = '10'
-            elif (self.BusVoltage >= '36.100')&(self.BusVoltage <= '46.000'):
+            elif (self.BusVoltage >= '36.001')&(self.BusVoltage <= '46.000'):
                 self.LimitedAB = '96'
                 self.RestrictedAB = '33'
                 self.ProhibitedAB = '17'
@@ -224,7 +225,8 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
 
     # Split Data from Headings and organize into Equipment Class
     i=0
-
+	
+    
     #try:
     with open('ARCHEAT.csv') as csvfile:
         FileReader = csv.reader(csvfile, delimiter=',', quotechar='|')
@@ -322,18 +324,24 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
     for eachobject in Temp2:
         if eachobject.PPEClass=='N/A':
             eachobject.PPEClass='Danger'
-
-    print 'The Following Buses are of Concern:\n',  
-    for eachobject in Temp2:
-        if eachobject.PPEClass=='Danger':
-            print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
-        elif eachobject.PPEClass=='N/A':
-            print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
-        elif eachobject.PPEClass=='4':
-            print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
-        elif eachobject.PPEClass=='3':
-            print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)    
-
+	
+	
+	with open(txt_FileName, 'w') as txt_file:
+			print 'The Following Buses are of Concern:\n',  
+			for eachobject in Temp2:
+				if eachobject.PPEClass=='Danger':
+					#print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
+					txt_file.write("{!s} is Arc Hazard Class {!s}\n".format(eachobject.BusName, eachobject.PPEClass))
+				elif eachobject.PPEClass=='N/A':
+					#print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
+					txt_file.write('{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass))
+				elif eachobject.PPEClass=='4':
+					#print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
+					txt_file.write('{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass))
+				elif eachobject.PPEClass=='3':
+					#print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
+					txt_file.write('{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass))
+	
     # Sort Equipment by Voltages
     Temp=[]
     SortedEquipmentLists=[]
@@ -397,7 +405,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
 
         line=line+1
 
-        #Printe Arc Heat Info
+        #Print Arc Heat Info
         for eachclass in SortedEquipmentLists:
             if eachclass.BusVoltageGroup==eachvoltage:   
                 eachclass.PrintArcheatTableRow(line)
@@ -510,7 +518,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
 
 def main():
 
-    parser = argparse.ArgumentParser(description='Cleans DWG Properties once Exported from AutoCAD')
+    parser = argparse.ArgumentParser(description='Creates Archeat Tables from EDSA Output')
     parser.add_argument('Job_Num', help='Job Number (ie. S2876)')
     parser.add_argument('Customer_Comp', help='Customer')
     parser.add_argument('Customer_Build', help='Location')
