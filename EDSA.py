@@ -9,6 +9,7 @@ import datetime as DT
 from xlrd import open_workbook
 import argparse
 
+global Workbook_FileName
 
 def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Address, Working_Directory):
 
@@ -20,19 +21,17 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
     Working_Directory = 'd:\Scott\Scripts\Python\Report Generator\Test\'
     """
 
-    #Working_Directory = 'e:\Personal Projects\SV0002 - EDSA Report Generator/Test Directory'
-    #Working_Directory = 'c:/Projects/SV0002 - EDSA Report Generator/Test Directory'
+	
 
+    Logo_Directory = 'c:\Users\Scott\Dropbox\Scripts\Python\AF-Report-full\Images'
 
-    #Variable List
-
-
-    Logo_Directory = 'c:\Report Generator\Template'
     os.chdir(Working_Directory)
-
+	
     EquipmentList=[]
-            
-    # Styles for Excel Report
+		            
+    Workbook_FileName = '{!s}-AF-Archeat_Tables[{:%Y-%m-%d_%H%M%S}].xls'.format(Job_Number, DT.datetime.now())
+	
+	# Styles for Excel Report
     Main_Title_Style1 = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid_fill, fore_colour pale_blue; font: height 400, name HandelGothic BT, color-index dark_blue; border: left 2, left_colour black, right 2, right_colour black, top 2, top_colour black, bottom 0, bottom_colour black', num_format_str='#,##0')
     Main_Title_Style2 = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid_fill, fore_colour pale_blue; font: height 320, name HandelGothic BT, color-index dark_blue; border: left 2, left_colour black, right 2, right_colour black, top 0, top_colour black, bottom 0, bottom_colour black', num_format_str='#,##0')
     Main_Title_Style3 = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid_fill, fore_colour pale_blue; font: height 400, name HandelGothic BT, color-index dark_red; border: left 2, left_colour black, right 2, right_colour black, top 0, top_colour black, bottom 2, bottom_colour black', num_format_str='#,##0')
@@ -42,8 +41,14 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
 
     Gap_Style = xlwt.easyxf('alignment: horizontal center, vertical center; pattern: pattern solid, fore_colour white; font: height 10, name Arial, color-index black; border: left 0, right 0, top 0, bottom 0', num_format_str='#,##0.000')
 
+	
+	
     TableText_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour white; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
     TableText_StyleL = xlwt.easyxf('alignment: horizontal left; pattern: pattern solid, fore_colour white; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
+
+	
+	
+    ArcheatNM_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour turquoise; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
     Archeat0_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour green; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
     Archeat1_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour yellow; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
     Archeat2_Style = xlwt.easyxf('alignment: horizontal center; pattern: pattern solid, fore_colour orange; font: height 200, name Arial, color-index black; border: left 1, right 1, top 1, bottom 1', num_format_str='#,##0.000')
@@ -79,7 +84,10 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
             self.ArcFlashBoundary = ArcFlashBoundary
             self.WorkingDistance = WorkingDistance
             self.AvailableEnergy = AvailableEnergy
-            self.PPEClass = PPEClass
+            if PPEClass == '0':
+                    self.PPEClass = 'NM'
+            else:
+                    self.PPEClass = PPEClass
 
             #PDC Missmatch Sanitization
             if self.ProtectiveDeviceName.find('!')!=-1:
@@ -121,6 +129,8 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
             #Set Archeat Colours
             if self.PPEClass=='0' :
                 self.Archeat_Style = Archeat0_Style
+            elif self.PPEClass=='NM' :
+                self.Archeat_Style = ArcheatNM_Style
             elif self.PPEClass=='1' :
                 self.Archeat_Style = Archeat1_Style
             elif self.PPEClass=='2' :
@@ -306,7 +316,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
             pass
 
     #Sort Equipment by PPEClass
-    ClassList=['0', '1', '2', '3', '4', 'Danger', 'N/A']
+    ClassList=['NM', '0', '1', '2', '3', '4', 'Danger', 'N/A']
     Temp1=[]
     Temp2=[]
     for eachclass in ClassList:
@@ -325,12 +335,12 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
         if eachobject.PPEClass=='N/A':
             eachobject.PPEClass='Danger'
 	
-	txt_FileName = '{!s}-Concerns.txt'.format(Job_Number)
+	txt_FileName = 'Concerns.txt'
 	with open(txt_FileName, 'w') as txt_file:
 			#for eachobject in Temp2:
 				#eachobject.BusName.replace('_', '-')
 				#print("{!s}\n".format(eachobject.BusName))
-			txt_file.write("\begin{enumerate}\n")
+			#txt_file.write("\begin{enumerate}\n")
 			for eachobject in Temp2:
 				if eachobject.PPEClass=='Danger':
 					#print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
@@ -344,7 +354,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
 				elif eachobject.PPEClass=='3':
 					#print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
 					txt_file.write('\item {!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName.replace('_', '-'), eachobject.PPEClass))
-			txt_file.write("\end{enumerate}\n")
+			#txt_file.write("\end{enumerate}\n")
 	
     # Sort Equipment by Voltages
     Temp=[]
@@ -440,7 +450,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
         #LOGO from Templates
         os.chdir(Logo_Directory)
         ws.write_merge(0, 2, 0, 0, ' ', Main_Title_Style4)
-        ws.insert_bitmap('logo5.bmp', 0, 0)
+        ws.insert_bitmap('logo6.bmp', 0, 0)
      
 
         #General Notes & Explanation
@@ -481,8 +491,8 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
 
 
         #Line + 5
-        ws.write_merge(line, line, 0, 1, 'Prohibited Approach Distance (inch)', GeneralNotesL_Style)
-        ws.write(line, 2, SheetProhibitedAB, GeneralNotesR_Style)
+        #ws.write_merge(line, line, 0, 1, 'Prohibited Approach Distance (inch)', GeneralNotesL_Style)
+        #ws.write(line, 2, SheetProhibitedAB, GeneralNotesR_Style)
 
         line=line+1
 
@@ -497,49 +507,48 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
         #Line + 8
         ws.write_merge(line, line+1, 4, 7, 'Clothing Class', Explanations_Style)
         ws.write_merge(line, line+1, 8, 13, 'Minimum clothing class designed to protect worker from second degree burns', Explanations_Style)
-        line=line+1
+        line=line+5
 
         #Set Print Area
-        ws.horz_page_breaks = [(line+3, 0, 14)]
-        ws.vert_page_breaks = [(14, 0, line+3)]
+        ws.paper_size_code = 1
+        ws.horz_page_breaks = [(line, 0, 14)]
+        ws.vert_page_breaks = [(14, 0, line)]
 
         #Set Page Witdh to 1 Page
-        ws.fit_num_pages = 1
         ws.fit_height_to_pages = 0
         ws.fit_width_to_pages = 1
+        ws.fit_num_pages = 1
         
     os.chdir(Working_Directory)
 
-    global Workbook_FileName
-    
-    Workbook_FileName = '{!s}-AF-Archeat_Tables[{:%Y-%m-%d_%H%M%S}].xls'.format(Job_Number, DT.datetime.now())
+
     wb.save(Workbook_FileName)
 
-    #print '\n', Workbook_FileName, ' Generated', '\n'
+    print '\n', Workbook_FileName, ' Generated', '\n'
 
     #except:
         #print "\n\nNo Valide ARCHEAT.csv File Located!"
-
-def main():
-
-    parser = argparse.ArgumentParser(description='Creates Archeat Tables from EDSA Output')
-    parser.add_argument('Job_Num', help='Job Number (ie. S2876)')
-    parser.add_argument('Customer_Comp', help='Customer')
-    parser.add_argument('Customer_Build', help='Location')
-    parser.add_argument('Customer_Add', help='Address')
-    parser.add_argument('Working_Dir', help='working directory')
-    args = parser.parse_args()
-
-    ArcheatTable(args.Job_Num, args.Customer_Comp, args.Customer_Build, args.Customer_Add, args.Working_Dir)
-
-
-    os.chdir(args.Working_Dir)
-
-   
-    print '\n', Workbook_FileName, ' Generated', '\n'
-    
-
-if __name__ == '__main__':
-    main()
-    sys.exit()
+##
+##def main():
+##
+##    parser = argparse.ArgumentParser(description='Creates Archeat Tables from EDSA Output')
+##    parser.add_argument('Job_Num', help='Job Number (ie. S2876)')
+##    parser.add_argument('Customer_Comp', help='Customer')
+##    parser.add_argument('Customer_Build', help='Location')
+##    parser.add_argument('Customer_Add', help='Address')
+##    parser.add_argument('Working_Dir', help='working directory')
+##    args = parser.parse_args()
+##
+##    ArcheatTable(args.Job_Num, args.Customer_Comp, args.Customer_Build, args.Customer_Add, args.Working_Dir)
+##
+##
+##    os.chdir(args.Working_Dir)
+##
+##   
+##    print '\n', Workbook_FileName, ' Generated', '\n'
+##    
+##
+##if __name__ == '__main__':
+##    main()
+##    sys.exit()
 
