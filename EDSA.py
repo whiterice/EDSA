@@ -548,7 +548,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
 ##    print '\n', Workbook_FileName, ' Generated', '\n'
 ##    
 ##
-##if __name__ == '__main__':
-##    main()
-##    sys.exit()
+if __name__ == '__main__':
+    main()
+    sys.exit()
 
