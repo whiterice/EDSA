@@ -319,6 +319,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
     ClassList=['NM', '0', '1', '2', '3', '4', 'Danger', 'N/A']
     Temp1=[]
     Temp2=[]
+    concerns=[]
     for eachclass in ClassList:
         for EachItem in EquipmentList:
             if EachItem.PPEClass==eachclass:
@@ -341,21 +342,31 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
 				#eachobject.BusName.replace('_', '-')
 				#print("{!s}\n".format(eachobject.BusName))
 			#txt_file.write("\begin{enumerate}\n")
-			for eachobject in Temp2:
-				if eachobject.PPEClass=='Danger':
-					#print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
-					txt_file.write("\item {!s} is Arc Hazard Class {!s}\n".format(eachobject.BusName.replace('_', '-'), eachobject.PPEClass))
-				elif eachobject.PPEClass=='N/A':
-					#print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
-					txt_file.write('\item {!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName.replace('_', '-'), eachobject.PPEClass))
-				elif eachobject.PPEClass=='4':
-					#print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
-					txt_file.write('\item {!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName.replace('_', '-'), eachobject.PPEClass))
-				elif eachobject.PPEClass=='3':
-					#print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
-					txt_file.write('\item {!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName.replace('_', '-'), eachobject.PPEClass))
-			#txt_file.write("\end{enumerate}\n")
-	
+                        Classes = ['Danger', 'N/A', '4', '3']
+                        for EachClass in Classes:
+                            for eachobject in Temp2:
+                                    if eachobject.PPEClass==EachClass:
+                                            #print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
+                                            txt_file.write("\item {!s} is Arc Hazard Class {!s}\n".format(eachobject.BusName.replace('_', '-'), eachobject.PPEClass))
+
+
+##			for eachobject in Temp2:
+##				if eachobject.PPEClass=='Danger':
+##					#print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
+##					txt_file.write("\item {!s} is Arc Hazard Class {!s}\n".format(eachobject.BusName.replace('_', '-'), eachobject.PPEClass))
+##				elif eachobject.PPEClass=='N/A':
+##					#print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
+##					txt_file.write('\item {!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName.replace('_', '-'), eachobject.PPEClass))
+##				elif eachobject.PPEClass=='4':
+##					#print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
+##					txt_file.write('\item {!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName.replace('_', '-'), eachobject.PPEClass))
+##				elif eachobject.PPEClass=='3':
+##					#print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
+##					txt_file.write('\item {!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName.replace('_', '-'), eachobject.PPEClass))
+##			#txt_file.write("\end{enumerate}\n")
+
+
+
     # Sort Equipment by Voltages
     Temp=[]
     SortedEquipmentLists=[]
