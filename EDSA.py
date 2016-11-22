@@ -8,6 +8,7 @@ import xlwt
 import datetime as DT
 from xlrd import open_workbook
 import argparse
+import subprocess
 
 global Workbook_FileName
 
@@ -23,7 +24,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
 
 	
 
-    Logo_Directory = 'c:\Users\Scott\Dropbox\Scripts\Python\AF-Report-full\Images'
+    Logo_Directory = 'd:\svermeire\Dropbox\Dropbox\Scripts\Python\AF-Report-full\Images'
 
     os.chdir(Working_Directory)
 	
@@ -391,6 +392,11 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
     UnsortedCount = len(EquipmentList) - UnsortedCount
     print UnsortedCount, ' pieces of Equipment were left unsorted'                                         
 
+    #Label Paths
+    Label_Script_Path = "d:\svermeire\Dropbox\Dropbox\Scripts\Python\AF-Report-full\Python\CreateLabel\CreateAFLabel.py"
+    print "\n\n", Label_Script_Path, "\n\n"
+
+
     #Write to Excel
     wb = xlwt.Workbook()
 
@@ -423,12 +429,13 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
         line=line+1
 
         
-        q=0
-        for eachcol in Headings_Pure:
+        
+        for q, eachcol in enumerate(Headings_Pure):
             ws.write(line, q, eachcol, Headings_Style)
-            q = q + 1
 
         line=line+1
+
+        
 
         #Print Arc Heat Info
         for eachclass in SortedEquipmentLists:
@@ -439,6 +446,19 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
                 SheetRestrictedAB = eachclass.RestrictedAB
                 SheetProhibitedAB = eachclass.ProhibitedAB
                 line=line+1
+
+                subprocess.call(["python", Label_Script_Path,
+                                 "Warning", eachclass.BusName, eachclass.BusVoltage, "XX",
+                                 "XX", "XX", "XX", eachclass.AvailableEnergy,
+                                 eachclass.ArcFlashBoundary, eachclass.WorkingDistance, eachclass.PPEClass, "XX",
+                                 "XX", Working_Directory])
+                print "{!s} Label Created".format(eachclass.BusName)
+                
+                Label_Check = 0
+                while(Label_Check == 0):
+                    for file in os.listdir(os.getcwd()):
+                        if file.find(eachclass.BusName):
+                            Label_Check = 1
 
         #Space Before Notes and General Explanation
         line=line+1
