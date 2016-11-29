@@ -151,41 +151,83 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
             self.CalcFactor = '1.5'
 
             #Setup Arc Flash Boundaries
-            if self.BusVoltage < '0.050':
+            if self.BusVoltage <= '0.050':
                 self.LimitedAB = 'Not Specified'
                 self.RestrictedAB = 'Not Specified'
-                self.ProhibitedAB = 'Not Specified'
-            elif (self.BusVoltage >= '0.050')&(self.BusVoltage <= '0.150'):
+            elif (self.BusVoltage > '0.050')&(self.BusVoltage <= '0.150'):
                 self.LimitedAB = '42'
                 self.RestrictedAB = 'Avoid Contact'
-                self.ProhibitedAB = 'Avoid Contact'
-            elif (self.BusVoltage >= '0.151')&(self.BusVoltage <= '0.750'):
+            elif (self.BusVoltage > '0.150')&(self.BusVoltage <= '0.750'):
                 self.LimitedAB = '42'
                 self.RestrictedAB = '12'
-                self.ProhibitedAB = '1'
-            elif (self.BusVoltage >= '0.751')&(self.BusVoltage <= '15.000'):
+            elif (self.BusVoltage > '0.750')&(self.BusVoltage <= '15.000'):
                 self.LimitedAB = '60'
                 self.RestrictedAB = '26'
-                self.ProhibitedAB = '7'
-            elif (self.BusVoltage >= '15.001')&(self.BusVoltage <= '36.000'):
+            elif (self.BusVoltage > '15.000')&(self.BusVoltage <= '36.000'):
                 self.LimitedAB = '72'
                 self.RestrictedAB = '31'
-                self.ProhibitedAB = '10'
-            elif (self.BusVoltage >= '36.001')&(self.BusVoltage <= '46.000'):
+            elif (self.BusVoltage > '36.000')&(self.BusVoltage <= '46.000'):
                 self.LimitedAB = '96'
                 self.RestrictedAB = '33'
-                self.ProhibitedAB = '17'
             else:
                 self.LimitedAB = 'Equipment_Voltage_Error'
                 self.RestrictedAB = 'Equipment_Voltage_Error'
-                self.ProhibitedAB = 'Equipment_Voltage_Error'
                 print ('Voltage Out of Range for {!s}.  Please Update Voltage Range').format(self.BusName)
 
             #Voltage Sanitize
             #(kV, V) = self.BusVoltage.split('.')
             #self.BusVoltageGroup = ((int(kV)*1000)+(int(V)))
             self.BusVoltageGroup = int(float(self.BusVoltage)*1000)
-            
+
+            #Analysis Date
+            self.AnalysisDate = '{:%Y-%m-%d}'.format(DT.datetime.now())
+
+            #PPE Requirements as per Table 5 of CSAZ462
+            if self.PPEClass == '0' or self.PPEClass == 'NM':
+                self.InsulatedTools = 'RQ'
+                self.FaceShield = 'AN'
+                self.SuitHood = 'NR'
+            elif self.PPEClass == '1':
+                self.InsulatedTools = '1'
+                self.FaceShield = 'RQ'
+                self.SuitHood = 'NR'
+            elif self.PPEClass == '2':
+                self.InsulatedTools = 'RQ'
+                self.FaceShield = 'RQ'
+                self.SuitHood = 'NR'
+            elif self.PPEClass == '3':
+                self.InsulatedTools = 'RQ'
+                self.FaceShield = 'NR'
+                self.SuitHood = 'RQ'
+            elif self.PPEClass == '4':
+                self.InsulatedTools = 'RQ'
+                self.FaceShield = 'NR'
+                self.SuitHood = 'RQ'
+            elif self.PPEClass == 'N/A' or self.PPEClass == 'Danger':
+                self.InsulatedTools = 'RQ'
+                self.FaceShield = 'NR'
+                self.SuitHood = 'RQ' 
+            else:
+                self.InsulatedTools = 'ERROR'
+                self.FaceShield = 'ERROR'
+                self.SuitHood = 'ERROR'
+
+            #Glove Requirements
+            #Setup Arc Flash Boundaries
+            if self.BusVoltage <= '0.500':
+                self.GloveClass = '00'
+            elif (self.BusVoltage > '0.500')&(self.BusVoltage <= '1.000'):
+                self.GloveClass = '0'
+            elif (self.BusVoltage > '1.000')&(self.BusVoltage <= '7.500'):
+                self.GloveClass = '1'
+            elif (self.BusVoltage > '7.500')&(self.BusVoltage <= '17.000'):
+                self.GloveClass = '2'
+            elif (self.BusVoltage > '17.000')&(self.BusVoltage <= '26.500'):
+                self.GloveClass = '3'
+            elif (self.BusVoltage > '26.500')&(self.BusVoltage <= '36.000'):
+                self.GloveClass = '4'
+            else:
+                self.GloveClass = 'ERROR'
 
         def __str__(self):
             names = ('BusName',
@@ -351,6 +393,10 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
                                             txt_file.write("\item {!s} is Arc Hazard Class {!s}\n".format(eachobject.BusName.replace('_', '-'), eachobject.PPEClass))
 
 
+   
+    
+
+
 ##			for eachobject in Temp2:
 ##				if eachobject.PPEClass=='Danger':
 ##					#print '{!s} is Arc Hazard Class {!s}\n'.format(eachobject.BusName, eachobject.PPEClass)
@@ -444,14 +490,13 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
                 SheetCalcFactor = eachclass.CalcFactor
                 SheetLimitedAB = eachclass.LimitedAB
                 SheetRestrictedAB = eachclass.RestrictedAB
-                SheetProhibitedAB = eachclass.ProhibitedAB
                 line=line+1
 
                 subprocess.call(["python", Label_Script_Path,
-                                 "Warning", eachclass.BusName, eachclass.BusVoltage, "XX",
-                                 "XX", "XX", "XX", eachclass.AvailableEnergy,
-                                 eachclass.ArcFlashBoundary, eachclass.WorkingDistance, eachclass.PPEClass, "XX",
-                                 "XX", Working_Directory])
+                                 "Warning", eachclass.BusName, eachclass.BusVoltage, eachclass.LimitedAB,
+                                 eachclass.RestrictedAB, eachclass.GloveClass, eachclass.InsulatedTools, eachclass.AvailableEnergy,
+                                 eachclass.ArcFlashBoundary, eachclass.WorkingDistance, eachclass.PPEClass, eachclass.FaceShield,
+                                 eachclass.SuitHood, eachclass.AnalysisDate, Working_Directory])
                 print "{!s} Label Created".format(eachclass.BusName)
                 
                 Label_Check = 0
@@ -462,7 +507,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
         #LabelsDirectory = '{!s}-Labels[{:%Y-%m-%d_%H%M%S}].xls'.format(Job_Number, DT.datetime.now())
         #os.rename('Labels', LabelsDirectory)
 
-        #Space Before Notes and General Explanation
+        #Space Before Notes and General Explanation 
         line=line+1
 
         #Column Width Adjustments
