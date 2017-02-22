@@ -24,7 +24,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
 
 	
 
-    Logo_Directory = 'd:\svermeire\Dropbox\Dropbox\Scripts\Python\AF-Report-full\Images'
+    Logo_Directory = 'z:\Source-Code\ArcFlash\AF-Report-full\Images'
 
     os.chdir(Working_Directory)
 	
