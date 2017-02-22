@@ -12,7 +12,7 @@ import subprocess
 
 global Workbook_FileName
 
-def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Address, Working_Directory):
+def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Address, Working_Directory, Report_Directory):
 
     """
     Job_Number = 'S2913',
@@ -439,7 +439,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
     print UnsortedCount, ' pieces of Equipment were left unsorted'                                         
 
     #Label Paths
-    Label_Script_Path = "d:\svermeire\Dropbox\Dropbox\Scripts\Python\AF-Report-full\Python\CreateLabel\CreateAFLabel.py"
+    Label_Script_Path = "z:\Source-Code\ArcFlash\AF-Report-full\Python\CreateLabel\CreateAFLabel.py"
     print "\n\n", Label_Script_Path, "\n\n"
 
 
@@ -481,7 +481,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
 
         line=line+1
 
-        
+        Label_Dir = os.getcwd()
 
         #Print Arc Heat Info
         for eachclass in SortedEquipmentLists:
@@ -496,7 +496,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
                                  "Warning", eachclass.BusName, eachclass.BusVoltage, eachclass.LimitedAB,
                                  eachclass.RestrictedAB, eachclass.GloveClass, eachclass.InsulatedTools, eachclass.AvailableEnergy,
                                  eachclass.ArcFlashBoundary, eachclass.WorkingDistance, eachclass.PPEClass, eachclass.FaceShield,
-                                 eachclass.SuitHood, eachclass.AnalysisDate, Working_Directory])
+                                 eachclass.SuitHood, eachclass.AnalysisDate, Report_Directory])
                 print "{!s} Label Created".format(eachclass.BusName)
                 
                 Label_Check = 0
