@@ -462,15 +462,15 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
 
         line=0
 
-        ws.write_merge(line, line, 1, 13, ('{!s} - {!s}').format(Customer_Company, Customer_Building), Main_Title_Style1)
+        ws.write_merge(line, line, 0, 13, ('{!s} - {!s}').format(Customer_Company, Customer_Building), Main_Title_Style1)
 
         line = line + 1
      
-        ws.write_merge(line, line, 1, 13, ('{!s}').format(Customer_Address), Main_Title_Style2)
+        ws.write_merge(line, line, 0, 13, ('{!s}').format(Customer_Address), Main_Title_Style2)
 
         line = line + 1
 
-        ws.write_merge(line, line, 1, 13, ('Arc Flash Analysis - {!s}V Equipment').format(eachvoltage), Main_Title_Style3)
+        ws.write_merge(line, line, 0, 13, ('Arc Flash Analysis - {!s}V Equipment').format(eachvoltage), Main_Title_Style3)
 
         line=line+1
 
@@ -525,11 +525,12 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
         ws.col(11).width=256*8
         ws.col(12).width=256*6
 
-        #LOGO from Templates
-        os.chdir(Logo_Directory)
-        ws.write_merge(0, 2, 0, 0, ' ', Main_Title_Style4)
-        ws.insert_bitmap('logo6.bmp', 0, 0)
-     
+##        #LOGO from Templates
+##        os.chdir(Logo_Directory)
+##        ws.write_merge(0, 2, 0, 0, ' ', Main_Title_Style4)
+##        ws.insert_bitmap('logo6.bmp', 0, 0)
+
+   
 
         #General Notes & Explanation
         ws.write(line, 0, 'General Notes:', GeneralNotes_Title_Style)
