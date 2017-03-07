@@ -12,7 +12,7 @@ import subprocess
 
 global Workbook_FileName
 
-def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Address, Working_Directory, Report_Directory):
+def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Address, Working_Directory, Report_Directory, Archeat_Table_Type):
 
     """
     Job_Number = 'S2913',
@@ -451,12 +451,35 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
         #Sheet Name
         ws = wb.add_sheet('{!s}V Equipment'.format(eachvoltage))    
 
-        #Header and Footer
-        FOOTER = str(u"&L[{:%Y/%m/%d}]" u"&RPowerCore Engineering www.PowerCore.ca".format(DT.datetime.now()))
-        HEADER = ' '
 
-        ws.footer_str = (FOOTER)
-        ws.header_str = (HEADER)
+
+        #Header and Footer
+        if Archeat_Table_Type == 'L':  
+
+            FOOTER = ' '
+            HEADER = ' '
+
+            ws.footer_str = (FOOTER)
+            ws.header_str = (HEADER)
+
+            ws.left_margin = 0.3
+            ws.right_margin = 0.3
+            ws.top_margin = 1.25
+            ws.bottom_margin = 1.25
+            
+        else:
+
+            FOOTER = str(u"&L[{:%Y/%m/%d}]" u"&RPowerCore Engineering www.PowerCore.ca".format(DT.datetime.now()))
+            HEADER = ' '
+
+            ws.footer_str = (FOOTER)
+            ws.header_str = (HEADER)
+            ws.left_margin = 0.3
+            ws.right_margin = 0.3
+            ws.top_margin = 0.3
+            ws.bottom_margin = 0.3
+
+
 
         #Title Block
 
