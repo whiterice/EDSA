@@ -281,6 +281,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
 	
     
     #try:
+    os.chdir(Working_Directory)
     with open('ARCHEAT.csv') as csvfile:
         FileReader = csv.reader(csvfile, delimiter=',', quotechar='|')
         for row in FileReader:
@@ -378,6 +379,7 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
     for eachobject in Temp2:
         if eachobject.PPEClass=='N/A':
             eachobject.PPEClass='Danger'
+            
 	
 	txt_FileName = 'Concerns.txt'
 	with open(txt_FileName, 'w') as txt_file:
