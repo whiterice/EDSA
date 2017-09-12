@@ -517,18 +517,27 @@ def ArcheatTable(Job_Number, Customer_Company, Customer_Building, Customer_Addre
                 SheetRestrictedAB = eachclass.RestrictedAB
                 line=line+1
 
-                subprocess.call(["python", Label_Script_Path,
-                                 "Warning", eachclass.BusName, eachclass.BusVoltage, eachclass.LimitedAB,
-                                 eachclass.RestrictedAB, eachclass.GloveClass, eachclass.InsulatedTools, eachclass.AvailableEnergy,
-                                 eachclass.ArcFlashBoundary, eachclass.WorkingDistance, eachclass.PPEClass, eachclass.FaceShield,
-                                 eachclass.SuitHood, eachclass.AnalysisDate, Report_Directory])
-                print "{!s} Label Created".format(eachclass.BusName)
-                
-                Label_Check = 0
-                while(Label_Check == 0):
-                    for file in os.listdir(os.getcwd()):
-                        if file.find(eachclass.BusName):
-                            Label_Check = 1
+#################################################################################################################################################
+#Label Generation################################################################################################################################
+#################################################################################################################################################
+#temporarily disabled
+
+##                subprocess.call(["python", Label_Script_Path,
+##                                 "Warning", eachclass.BusName, eachclass.BusVoltage, eachclass.LimitedAB,
+##                                 eachclass.RestrictedAB, eachclass.GloveClass, eachclass.InsulatedTools, eachclass.AvailableEnergy,
+##                                 eachclass.ArcFlashBoundary, eachclass.WorkingDistance, eachclass.PPEClass, eachclass.FaceShield,
+##                                 eachclass.SuitHood, eachclass.AnalysisDate, Report_Directory])
+##                print "{!s} Label Created".format(eachclass.BusName)
+##                
+##                Label_Check = 0
+##                while(Label_Check == 0):
+##                    for file in os.listdir(os.getcwd()):
+##                        if file.find(eachclass.BusName):
+##                            Label_Check = 1
+
+#################################################################################################################################################
+
+
         #LabelsDirectory = '{!s}-Labels[{:%Y-%m-%d_%H%M%S}].xls'.format(Job_Number, DT.datetime.now())
         #os.rename('Labels', LabelsDirectory)
 
